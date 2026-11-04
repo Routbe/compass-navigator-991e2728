@@ -18,5 +18,6 @@
 - [x] Review briefs and referenced projects for licensed patterns without executing their code; no copyleft reference source copied.
 
 ## Remaining scope
+- [ ] Refine code-drawn Wallet artwork, collect Wallet secrets securely, and verify PNG rendering without claiming live issuance.
 - Additional homepage motion refinements, visitor-metric dashboard widgets and richer profile-widget resizing are not implemented in this milestone.
 - Info/dev/safety article translations and full press-root localization are outside the completed About/Wallet/previews translation set.
