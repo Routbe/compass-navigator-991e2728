@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { docs, docsInCategory, parseDoc } from "@/lib/docs-catalog";
+import { docs, docsInCategory, getDoc, parseDoc } from "@/lib/docs-catalog";
 
 const source = (category = "about", content = "# Example\n\n## Visible\n") => `---\ntitle: Example\ndescription: A precise summary.\ncategory: ${category}\nlast_updated: "2026-10-31"\nai_ready: true\n---\n${content}`;
 
@@ -35,4 +35,15 @@ it("covers the exhaustive four-pillar sitemap", () => {
 it("orders pillar overviews before their introduction and technical articles", () => {
   expect(docsInCategory("about").slice(0, 2).map(doc => doc.path)).toEqual(["/about", "/about/manifesto"]);
   expect(docsInCategory("dev").slice(0, 3).map(doc => doc.path)).toEqual(["/dev", "/dev/get-started", "/dev/identity-oidc"]);
+});
+
+it("provides all ten About articles in Dutch, English, French and German without duplicate canonical entries", () => {
+  const slugs = ["", "manifesto", "platform", "rout-card", "anonymous-questions", "responsible-ai", "ecosystem", "sovereignty", "open-source", "brand"];
+  for (const locale of ["nl", "en", "fr", "de"] as const) {
+    for (const slug of slugs) {
+      const path = `/about${slug ? `/${slug}` : ""}`;
+      expect(getDoc(path, locale)?.locale).toBe(locale);
+      expect(docs.filter(doc => doc.path === path)).toHaveLength(1);
+    }
+  }
 });
