@@ -1,7 +1,7 @@
 import { useId, useState, type ReactNode } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { premiumSpringPreset } from "@/lib/spatial-motion";
+import { snappySpringPreset } from "@/lib/spatial-motion";
 import { cn } from "@/lib/utils";
 
 /** A controlled choice track: animation never commits a choice or performs an action. */
