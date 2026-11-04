@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { type Dispatch, type ReactNode, type SetStateAction, useState } from "react";
-import { Plus, LayoutGrid } from "lucide-react";
+import { Plus, LayoutGrid, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ProfileLinksManager } from "@/components/dashboard/editor/ProfileLinksManager";
@@ -104,7 +104,10 @@ export function ProfileContentAccordion({
             <Switch aria-label={t("studio.effects.title")} checked={cardEffects} onCheckedChange={onCardEffectsChange} />
           </div>
         </details>
-        {children}
+        <details className="border-t border-border pt-4" open>
+          <summary className="flex cursor-pointer list-none items-center justify-between py-2 text-sm font-medium"><span className="flex items-center gap-2"><LayoutGrid className="size-4" />Widgets</span><ChevronDown className="size-4" /></summary>
+          <div className="space-y-4 pt-3">{children}</div>
+        </details>
       </AccordionContent>
     </AccordionItem>
   );

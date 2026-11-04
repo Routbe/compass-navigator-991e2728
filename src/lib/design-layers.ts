@@ -26,6 +26,8 @@ export type BackgroundLayer = {
 };
 
 export type Section = { id: SectionId; visible: boolean };
+export const IDENTITY_PARTS = ["name", "handle", "location", "bio"] as const;
+export type IdentityPart = typeof IDENTITY_PARTS[number];
 
 export type BlockStyle = {
   bg: string | null;
@@ -53,6 +55,8 @@ export type DesignLayers = {
   sections: Section[];
   blockStyles: Record<string, BlockStyle>;
   decorations: Decoration[];
+  identityOrder?: IdentityPart[];
+  linkDisplay?: "rows" | "icons" | "both";
 };
 
 export const SECTION_LABEL: Record<SectionId, string> = {
@@ -187,7 +191,12 @@ export function normalizeDesignLayers(raw: unknown): DesignLayers {
       };
     });
 
-  return { version: 1, backgrounds, sections, blockStyles, decorations };
+  const identityOrder = [...new Set((Array.isArray(r["identityOrder"]) ? r["identityOrder"] : []).filter((v): v is IdentityPart => IDENTITY_PARTS.includes(v as IdentityPart)))];
+  for (const part of IDENTITY_PARTS) if (!identityOrder.includes(part)) identityOrder.push(part);
+  return { version: 1, backgrounds, sections, blockStyles, decorations,
+    ...(identityOrder.some((part, i) => part !== IDENTITY_PARTS[i]) ? { identityOrder } : {}),
+    ...(["rows", "icons", "both"].includes(String(r["linkDisplay"])) ? { linkDisplay: r["linkDisplay"] as "rows" | "icons" | "both" } : {}),
+  };
 }
 
 export const serializeDesignLayers = (l: DesignLayers) => JSON.stringify(normalizeDesignLayers(l));
@@ -196,9 +205,10 @@ export const serializeDesignLayers = (l: DesignLayers) => JSON.stringify(normali
 export function isEmptyLayers(l: DesignLayers): boolean {
   return (
     l.backgrounds.length === 0 &&
+    !l.identityOrder && !l.linkDisplay &&
     l.decorations.length === 0 &&
     Object.keys(l.blockStyles).length === 0 &&
-    l.sections.every((s, i) => s.id === DEFAULT_SECTIONS[i]!.id && s.visible)
+    l.sections.every((s, i) => s.id === DEFAULT_SECTIONS[i]?.id && s.visible)
   );
 }
 
@@ -258,6 +268,11 @@ export function blockStyleOverride(s: BlockStyle | undefined): CSSProperties {
 export const sectionOrder = (l: DesignLayers, id: SectionId) => l.sections.findIndex((s) => s.id === id);
 export const sectionVisible = (l: DesignLayers, id: SectionId) =>
   l.sections.find((s) => s.id === id)?.visible ?? true;
+
+export const identityOrderOf = (l: DesignLayers, id: IdentityPart) => (l.identityOrder ?? [...IDENTITY_PARTS]).indexOf(id);
+export function profileHandleLabel(path: string): string {
+  return `@${path.replace(/^\/+/, "").replace(/^@/, "")}`;
+}
 
 /* --------------------------------------------------------------- presets */
 

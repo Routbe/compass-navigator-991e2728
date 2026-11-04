@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { DocPage } from "@/components/mdx/DocPage";
 import { docHead } from "@/lib/docs-catalog";
-export const Route = createFileRoute("/about/ecosystem")({ head: () => docHead("/about/ecosystem"), component: Page });
+import { getRequestLocale } from "@/lib/locale.functions";
+export const Route = createFileRoute("/about/ecosystem")({ loader: () => getRequestLocale(), head: ({ loaderData }) => docHead("/about/ecosystem", loaderData?.locale), component: Page });
 function Page() { return <DocPage path="/about/ecosystem" />; }

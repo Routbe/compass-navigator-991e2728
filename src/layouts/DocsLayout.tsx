@@ -5,17 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useI18n } from "@/lib/i18n";
-import { docs, docsInCategory, DOC_CATEGORIES, DOC_LABELS, type DocEntry } from "@/lib/docs-catalog";
+import { docs, getDoc, docsInCategory, DOC_CATEGORIES, DOC_LABELS, type DocEntry } from "@/lib/docs-catalog";
 
 export function DocsLayout({ doc, children }: { doc: DocEntry; children: ReactNode }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState("");
-  const articles = docsInCategory(doc.category);
+  const articles = docsInCategory(doc.category, locale);
   const index = articles.findIndex(d => d.path === doc.path);
   const previous = articles[index - 1]; const next = articles[index + 1];
-  const results = query.trim() ? docs.filter(d => `${d.title} ${d.description}`.toLowerCase().includes(query.toLowerCase())).slice(0, 8) : [];
+  const results = query.trim() ? docs.map(d => getDoc(d.path, locale) ?? d).filter(d => `${d.title} ${d.description}`.toLowerCase().includes(query.toLowerCase())).slice(0, 8) : [];
   useEffect(() => {
     setOpen(false); setQuery(""); setActive("");
     const updateActive = () => {

@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { canonicalLink, SITE_ORIGIN } from "@/lib/site";
 import { PressFileGrid, PressSubpage, type PressFile } from "@/components/press/PressSubpage";
+import { useI18n } from "@/lib/i18n";
 
 const TITLE = "Deelafbeeldingen | ROUT perskit";
 const DESCRIPTION = "De officiële deelkaarten (1200×630) die ROUT toont op WhatsApp, LinkedIn, Slack en X, per pagina en per taal.";
@@ -17,8 +18,9 @@ export const Route = createFileRoute("/press_/previews")({
 });
 
 function Page() {
-  return <PressSubpage kicker="Perskit · Delen" title="Deelafbeeldingen" intro="Wanneer iemand een ROUT-link deelt, tonen apps deze kaart. Ze worden in code getekend uit het officiële logo, per pagina en per taal, en wijzigen nooit willekeurig.">
-    <PressFileGrid files={FILES} />
-    <p className="mt-10 text-sm text-muted-foreground">Andere taal nodig? Vervang <code className="font-mono">-nl</code> in de link door <code className="font-mono">-en</code>, <code className="font-mono">-fr</code> of <code className="font-mono">-de</code>.</p>
+  const { locale } = useI18n();
+  const copy = { nl: ["Deelafbeeldingen", "Officiële ROUT-deelkaarten, getekend uit het merklogo. Kies bovenaan je taal om de bijbehorende bestanden te bekijken.", "Publieke deelkaart", "Startpagina", "Over ROUT", "Ontdekken", "Perskit", "Soevereiniteit", "Privacy"], en: ["Share previews", "Official ROUT share cards, drawn from the brand logo. Choose your language above to see the matching files.", "Public share card", "Home", "About ROUT", "Explore", "Press kit", "Sovereignty", "Privacy"], fr: ["Aperçus de partage", "Cartes de partage officielles ROUT, dessinées à partir du logo. Choisissez votre langue en haut pour voir les fichiers correspondants.", "Carte de partage publique", "Accueil", "À propos de ROUT", "Explorer", "Kit presse", "Souveraineté", "Confidentialité"], de: ["Vorschaubilder", "Offizielle ROUT-Vorschaubilder auf Basis des Markenlogos. Wähle oben deine Sprache für die passenden Dateien.", "Öffentliches Vorschaubild", "Startseite", "Über ROUT", "Entdecken", "Pressekit", "Souveränität", "Datenschutz"] }[locale];
+  return <PressSubpage kicker="ROUT / PRESS" title={copy[0] ?? TITLE} intro={copy[1] ?? DESCRIPTION}>
+    <PressFileGrid files={FILES.map((file, i) => ({ ...file, name: copy[i + 3] ?? file.name, use: copy[2] ?? "ROUT", href: file.href.replace("-nl.png", `-${locale}.png`) }))} />
   </PressSubpage>;
 }
