@@ -157,10 +157,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "manifest", href: "/manifest.webmanifest" },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.png", type: "image/png" },
-      { rel: "icon", href: "/favicon.ico", sizes: "any" },
-      { rel: "icon", href: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { rel: "icon", href: "/favicon.svg?v=rout-20261104", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon.png?v=rout-20261104", type: "image/png", sizes: "64x64" },
       { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
     ],
     // Knowledge graph for search engines and AI crawlers; dropped on member pages by BrandedHeadContent.
