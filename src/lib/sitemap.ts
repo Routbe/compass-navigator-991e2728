@@ -8,6 +8,8 @@ export const STATIC_SITEMAP_ENTRIES: SitemapEntry[] = [
   { path: "/studio", changefreq: "monthly", priority: 1.0 },
   { path: "/contact", changefreq: "monthly", priority: 0.7 },
   { path: "/press", changefreq: "monthly", priority: 0.6 },
+  { path: "/press/wallet", changefreq: "monthly", priority: 0.6 },
+  { path: "/press/previews", changefreq: "monthly", priority: 0.6 },
   { path: "/explore", changefreq: "weekly", priority: 0.6 },
   { path: "/wifi-qr", changefreq: "monthly", priority: 0.7 },
   { path: "/vcard-qr", changefreq: "monthly", priority: 0.7 },

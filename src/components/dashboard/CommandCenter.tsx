@@ -50,7 +50,8 @@ import { SpatialChoice } from "@/components/ui/spatial-choice";
 import { Input } from "@/components/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
-import { DASHBOARD_WIDGETS, normalizeDashboardLayout, moveDashboardWidget, type DashboardLayout, type DashboardTile, type DashboardWidgetId } from "@/lib/dashboard-layout";
+import { DASHBOARD_WIDGETS, OPTIONAL_DASHBOARD_WIDGETS, normalizeDashboardLayout, moveDashboardWidget, type DashboardLayout, type DashboardTile, type DashboardWidgetId } from "@/lib/dashboard-layout";
+import { DashboardMusic, DashboardWeather, DashboardVisitors, UpcomingDashboardWidget } from "./ExternalDashboardWidgets";
 import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { i18n as trI18n } from "@/lib/i18n";
 
@@ -460,18 +461,19 @@ const WIDGET_LABEL: Record<WidgetId, string> = {
   social: "Social & Prikbord",
   qa: "Anonieme Inbox",
   connections: "Gekoppelde apps",
+  visitors: "Bezoekers", spotify: "Spotify", weather: "Weer", smarthome: "Smarthome", fitness: "Fitness", smart: "Smart widgets",
 };
 
 /** Hidden widgets per device; the foundation for a rearrangeable board. */
 function useDashboardLayout(userId: string | undefined) {
   const key = userId ? `rout:dashboard-hidden:${userId}` : null;
-  const [board, setBoard] = useState<DashboardLayout>(() => normalizeDashboardLayout({ hidden: ["connections"] }));
+  const [board, setBoard] = useState<DashboardLayout>(() => normalizeDashboardLayout({ hidden: [...OPTIONAL_DASHBOARD_WIDGETS] }));
   useEffect(() => {
     if (!key) return;
     try {
       const raw = window.localStorage.getItem(key);
       const next = key ? window.localStorage.getItem(`${key}:layout`) : null;
-      setBoard(normalizeDashboardLayout(next ? JSON.parse(next) : { hidden: raw ? JSON.parse(raw) : ["connections"] }));
+      setBoard(normalizeDashboardLayout(next ? JSON.parse(next) : { hidden: raw ? [...JSON.parse(raw), ...OPTIONAL_DASHBOARD_WIDGETS] : [...OPTIONAL_DASHBOARD_WIDGETS] }));
     } catch {
       /* ignore corrupt layout */
     }
@@ -485,7 +487,7 @@ function useDashboardLayout(userId: string | undefined) {
   const toggle = (id: WidgetId) => update(prev => ({ ...prev, hidden: prev.hidden.includes(id) ? prev.hidden.filter(x => x !== id) : [...prev.hidden, id] }));
   const move = (id: WidgetId, direction: -1 | 1) => update(prev => moveDashboardWidget(prev, id, direction));
   const resize = (id: WidgetId, patch: Partial<DashboardTile>) => update(prev => ({ ...prev, tiles: { ...prev.tiles, [id]: { width: 1, height: "auto", ...prev.tiles[id], ...patch } } }));
-  const reset = () => update(() => normalizeDashboardLayout({ hidden: ["connections"] }));
+  const reset = () => update(() => normalizeDashboardLayout({ hidden: [...OPTIONAL_DASHBOARD_WIDGETS] }));
   return { ...board, toggle, move, resize, reset };
 }
 
@@ -494,10 +496,9 @@ function Slot({ id, editing, hidden, onToggle, order, tile, onMove, onResize, cl
 }) {
   if (hidden && !editing) return null;
   return (
-    <div data-tour={`cc-${id}`} style={{ order }} className={cn("relative min-w-0 [&>*]:h-full", editing && "pt-14 rounded-lg ring-1 ring-border", hidden && "opacity-40", tile ? ({ 1: "sm:col-span-1", 2: "sm:col-span-2", 3: "sm:col-span-2 xl:col-span-3" }[tile.width]) : className, tile?.height === "medium" && "min-h-72", tile?.height === "tall" && "min-h-96")}>
-      {children}
+    <div data-tour={`cc-${id}`} style={{ order }} className={cn("relative min-w-0 flex flex-col", editing && "rounded-lg ring-1 ring-border", hidden && "opacity-40", tile ? ({ 1: "sm:col-span-1", 2: "sm:col-span-2", 3: "sm:col-span-2 xl:col-span-3" }[tile.width]) : className, tile?.height === "medium" && "min-h-72", tile?.height === "tall" && "min-h-96")}>
       {editing ? (
-        <div className="absolute inset-x-2 top-2 flex flex-wrap items-center gap-1">
+        <div className="flex flex-wrap items-center gap-1 p-2">
         <Button size="icon" variant="ghost" className="size-7" disabled={order === 0} aria-label={`${WIDGET_LABEL[id]} naar voren`} onClick={() => onMove(id, -1)}><ArrowUp className="size-3.5" /></Button>
         <Button size="icon" variant="ghost" className="size-7" disabled={order === DASHBOARD_WIDGETS.length - 1} aria-label={`${WIDGET_LABEL[id]} naar achteren`} onClick={() => onMove(id, 1)}><ArrowDown className="size-3.5" /></Button>
         <Select value={String(tile?.width ?? 1)} onValueChange={v => onResize(id, { width: Number(v) as 1 | 2 | 3 })}><SelectTrigger className="h-7 w-16 text-xs" aria-label={`${WIDGET_LABEL[id]} breedte`}><SelectValue /></SelectTrigger><SelectContent><SelectItem value="1">1 kolom</SelectItem><SelectItem value="2">2 kolommen</SelectItem><SelectItem value="3">3 kolommen</SelectItem></SelectContent></Select>
@@ -514,6 +515,7 @@ function Slot({ id, editing, hidden, onToggle, order, tile, onMove, onResize, cl
         </Button>
         </div>
       ) : null}
+      <div className="flex min-w-0 flex-1 flex-col [&>*]:flex-1">{!hidden && children}</div>
     </div>
   );
 }
@@ -591,7 +593,7 @@ export function CommandCenter() {
         <Button variant="ghost" size="sm" onClick={layout.reset}>Indeling herstellen</Button>
       </div>}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <div className="grid auto-rows-min grid-flow-dense gap-4 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="grid auto-rows-min gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <SystemPulse items={pulse} />
 
           {showRelays || isEditingDashboard ? (
@@ -650,6 +652,10 @@ export function CommandCenter() {
             <Widget to="/studio" icon={LayoutTemplate} eyebrow="Profiel Hub" title="Hub beheren" hint="Blokken, thema en zichtbaarheid in de Studio." />
           </Slot>
           <Slot id="connections" {...slot("connections")}><Widget to="/dashboard/identity" icon={Fingerprint} eyebrow="Gekoppelde apps" title={c?.connectedApps === null || c?.connectedApps === undefined ? "—" : plural(c.connectedApps, "app", "apps")} hint="Actieve toestemmingen voor je identiteit." /></Slot>
+          <Slot id="visitors" {...slot("visitors")}><DashboardVisitors userId={user.id} /></Slot>
+          <Slot id="spotify" {...slot("spotify")}><DashboardMusic userId={user.id} /></Slot>
+          <Slot id="weather" {...slot("weather")}><DashboardWeather /></Slot>
+          {(["smarthome", "fitness", "smart"] as const).map(id => <Slot key={id} id={id} {...slot(id)}><UpcomingDashboardWidget title={WIDGET_LABEL[id]} /></Slot>)}
         </div>
 
         <ChronosStream events={c?.events ?? []} syncing={state.syncing} />

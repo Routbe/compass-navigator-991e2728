@@ -189,11 +189,13 @@ export function ProfileView({
       b.kind === "spacer" || isProfileSectionKind(b.kind),
   );
   /** Bento mode only when the member gave at least one block a tile size. */
-  const bento = blocks.some((b) => b.size);
+  const bento = blocks.some((b) => b.size || layers.blockStyles[b.id]?.width || layers.blockStyles[b.id]?.height);
   const bentoCell = (b: ProfileBlock, node: ReactNode) => {
     if (!bento || node === null) return node;
-    const span = b.size === "small" ? "col-span-1" : b.size === "large" ? "col-span-2 [&>*]:min-h-40 [&>*]:h-full" : "col-span-2";
-    return <div key={b.id} className={cn("flex min-w-0 [&>*]:w-full", span)} data-tile={b.size ?? "row"}>{node}</div>;
+    const tile = layers.blockStyles[b.id];
+    const narrow = tile?.width ? tile.width === 1 : b.size === "small";
+    const span = narrow ? "col-span-1" : "col-span-2";
+    return <div key={b.id} style={blockStyleOverride(tile)} className={cn("flex min-w-0 [&>*]:w-full", span, tile?.height === "medium" && "min-h-48 [&>*]:min-h-48", tile?.height === "tall" && "min-h-72 [&>*]:min-h-72", !tile?.height && b.size === "large" && "[&>*]:min-h-40")} data-tile={b.size ?? "row"}>{node}</div>;
   };
   const liveProviders = profile.blocks.filter((b) => b.kind === "live").map((b) => b.value);
   /** Accent-animatie op de gekozen hoofdlink (glow, pulse of shimmer). */

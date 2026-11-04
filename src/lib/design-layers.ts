@@ -30,6 +30,8 @@ export const IDENTITY_PARTS = ["name", "handle", "location", "bio"] as const;
 export type IdentityPart = typeof IDENTITY_PARTS[number];
 
 export type BlockStyle = {
+  width?: 1 | 2;
+  height?: "auto" | "medium" | "tall";
   bg: string | null;
   text: string | null;
   radius: number | null; // 0–32 px
@@ -166,6 +168,8 @@ export function normalizeDesignLayers(raw: unknown): DesignLayers {
     const o = rec(value);
     const radius = o["radius"] === null || o["radius"] === undefined ? null : clamp(o["radius"], 0, 32, 12);
     blockStyles[key] = {
+      ...(o["width"] === 1 || o["width"] === 2 ? { width: o["width"] } : {}),
+      ...(["auto", "medium", "tall"].includes(String(o["height"])) ? { height: o["height"] as "auto" | "medium" | "tall" } : {}),
       bg: hexOrNull(o["bg"]),
       text: hexOrNull(o["text"]),
       radius,
