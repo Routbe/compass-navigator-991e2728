@@ -1,0 +1,15 @@
+{
+  "source": "https://github.com/Routbe/compass-navigator-29e1f8a8.git",
+  "kind": "source-repository",
+  "permissionConfirmed": true,
+  "credentialsCopied": false,
+  "databaseMigrationsApplied": false,
+  "sourceWebsiteComparison": "not applicable: repository supplied, not a deployed website",
+  "checks": {
+    "publicNavigation": "desktop and phone menus, all nine homepage chapters and bottom scrolling verified; Studio redirects signed-out visitors to /auth/sign-in",
+    "tests": "28 passed; 1 pre-existing docs-catalog ordering assertion failed; source implementation is unchanged",
+    "build": "OK",
+    "accountsAndData": "blocked: original database and service credentials unavailable",
+    "qrGeneration": "blocked: Studio requires sign-in; /qr-code-generator is documentation, not the generator"
+  }
+}
