@@ -221,7 +221,7 @@ export function ProfileView({
           ...(designButtonStyle({ ...design, buttonsCustom: true }, t) ?? {}),
           ...(prefs.themeOverrides[scope]?.fontPairing ? { fontFamily: fontPairingOf(design.fontPairing).body } : {}),
         }
-      : buttonStyle;
+      : scope !== "links" && scope !== "socials" ? { ...(buttonStyle ?? {}), borderRadius: Math.min(28, Number(buttonStyle?.borderRadius) || 12) } : buttonStyle;
     // Button text colour lives under Typography, so it applies even without custom button shapes.
     const withText = design.buttonTextColor ? { ...(own ?? {}), color: design.buttonTextColor } : own;
     const out = glass ? { ...(withText ?? {}), ...glass } : withText;

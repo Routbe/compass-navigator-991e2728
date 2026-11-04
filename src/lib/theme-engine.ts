@@ -146,7 +146,8 @@ export function normalizeGlassTargets(raw: unknown): GlassTargets {
 
 /** Global tokens merged with the scope's override ("all" = global only). */
 export function resolveScopedTokens(global: GlassTokens, overrides: ThemeOverrides, scope: ThemeScope): GlassTokens {
-  return scope === "all" ? global : { ...global, ...(overrides[scope] ?? {}) };
+  const widgetScope = ["widgets", "booking", "board", "presence", "questions", "answers"].includes(scope);
+  return scope === "all" ? global : { ...global, ...(widgetScope ? overrides.widgets : {}), ...(overrides[scope] ?? {}) };
 }
 
 /**
