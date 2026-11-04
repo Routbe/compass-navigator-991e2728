@@ -4,6 +4,8 @@ import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
 import {
   ArrowRight,
+  ArrowUp,
+  ArrowDown,
   ArrowUpRight,
   Check,
   Copy,
@@ -48,6 +50,8 @@ import { SpatialChoice } from "@/components/ui/spatial-choice";
 import { Input } from "@/components/ui/input";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
+import { DASHBOARD_WIDGETS, normalizeDashboardLayout, moveDashboardWidget, type DashboardLayout, type DashboardTile, type DashboardWidgetId } from "@/lib/dashboard-layout";
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
 import { i18n as trI18n } from "@/lib/i18n";
 
 const KIND_ICON: Record<ChronosKind, typeof Inbox> = {
@@ -445,7 +449,7 @@ function LivePresenceWidget({ userId }: { userId: string }) {
   );
 }
 
-type WidgetId = "presence" | "relays" | "hub" | "qr" | "inbox" | "agenda" | "social" | "qa";
+type WidgetId = DashboardWidgetId;
 const WIDGET_LABEL: Record<WidgetId, string> = {
   presence: "Live Presence",
   relays: "Identity Relays",
@@ -455,48 +459,60 @@ const WIDGET_LABEL: Record<WidgetId, string> = {
   agenda: "Agenda",
   social: "Social & Prikbord",
   qa: "Anonieme Inbox",
+  connections: "Gekoppelde apps",
 };
 
 /** Hidden widgets per device; the foundation for a rearrangeable board. */
 function useDashboardLayout(userId: string | undefined) {
   const key = userId ? `rout:dashboard-hidden:${userId}` : null;
-  const [hidden, setHidden] = useState<WidgetId[]>([]);
+  const [board, setBoard] = useState<DashboardLayout>(() => normalizeDashboardLayout({ hidden: ["connections"] }));
   useEffect(() => {
     if (!key) return;
     try {
       const raw = window.localStorage.getItem(key);
-      if (raw) setHidden(JSON.parse(raw) as WidgetId[]);
+      const next = key ? window.localStorage.getItem(`${key}:layout`) : null;
+      setBoard(normalizeDashboardLayout(next ? JSON.parse(next) : { hidden: raw ? JSON.parse(raw) : ["connections"] }));
     } catch {
       /* ignore corrupt layout */
     }
   }, [key]);
-  const toggle = (id: WidgetId) =>
-    setHidden((prev) => {
-      const next = prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id];
-      if (key) window.localStorage.setItem(key, JSON.stringify(next));
+  const update = (change: (previous: DashboardLayout) => DashboardLayout) =>
+    setBoard((prev) => {
+      const next = normalizeDashboardLayout(change(prev));
+      if (key) try { window.localStorage.setItem(`${key}:layout`, JSON.stringify(next)); } catch { /* unavailable device storage must not block editing */ }
       return next;
     });
-  return { hidden, toggle };
+  const toggle = (id: WidgetId) => update(prev => ({ ...prev, hidden: prev.hidden.includes(id) ? prev.hidden.filter(x => x !== id) : [...prev.hidden, id] }));
+  const move = (id: WidgetId, direction: -1 | 1) => update(prev => moveDashboardWidget(prev, id, direction));
+  const resize = (id: WidgetId, patch: Partial<DashboardTile>) => update(prev => ({ ...prev, tiles: { ...prev.tiles, [id]: { width: 1, height: "auto", ...prev.tiles[id], ...patch } } }));
+  const reset = () => update(() => normalizeDashboardLayout({ hidden: ["connections"] }));
+  return { ...board, toggle, move, resize, reset };
 }
 
-function Slot({ id, editing, hidden, onToggle, className, children }: {
-  id: WidgetId; editing: boolean; hidden: boolean; onToggle: (id: WidgetId) => void; className?: string; children: ReactNode;
+function Slot({ id, editing, hidden, onToggle, order, tile, onMove, onResize, className, children }: {
+  id: WidgetId; editing: boolean; hidden: boolean; onToggle: (id: WidgetId) => void; order: number; tile?: DashboardTile; onMove: (id: WidgetId, direction: -1 | 1) => void; onResize: (id: WidgetId, patch: Partial<DashboardTile>) => void; className?: string; children: ReactNode;
 }) {
   if (hidden && !editing) return null;
   return (
-    <div data-tour={`cc-${id}`} className={cn("relative min-w-0 [&>*]:h-full", editing && "rounded-2xl ring-1 ring-dashed ring-border", hidden && "opacity-40", className)}>
+    <div data-tour={`cc-${id}`} style={{ order }} className={cn("relative min-w-0 [&>*]:h-full", editing && "pt-14 rounded-lg ring-1 ring-border", hidden && "opacity-40", tile ? ({ 1: "sm:col-span-1", 2: "sm:col-span-2", 3: "sm:col-span-2 xl:col-span-3" }[tile.width]) : className, tile?.height === "medium" && "min-h-72", tile?.height === "tall" && "min-h-96")}>
       {children}
       {editing ? (
+        <div className="absolute inset-x-2 top-2 flex flex-wrap items-center gap-1">
+        <Button size="icon" variant="ghost" className="size-7" disabled={order === 0} aria-label={`${WIDGET_LABEL[id]} naar voren`} onClick={() => onMove(id, -1)}><ArrowUp className="size-3.5" /></Button>
+        <Button size="icon" variant="ghost" className="size-7" disabled={order === DASHBOARD_WIDGETS.length - 1} aria-label={`${WIDGET_LABEL[id]} naar achteren`} onClick={() => onMove(id, 1)}><ArrowDown className="size-3.5" /></Button>
+        <Select value={String(tile?.width ?? 1)} onValueChange={v => onResize(id, { width: Number(v) as 1 | 2 | 3 })}><SelectTrigger className="h-7 w-16 text-xs" aria-label={`${WIDGET_LABEL[id]} breedte`}><SelectValue /></SelectTrigger><SelectContent><SelectItem value="1">1 kolom</SelectItem><SelectItem value="2">2 kolommen</SelectItem><SelectItem value="3">3 kolommen</SelectItem></SelectContent></Select>
+        <Select value={tile?.height ?? "auto"} onValueChange={v => onResize(id, { height: v as DashboardTile["height"] })}><SelectTrigger className="h-7 w-20 text-xs" aria-label={`${WIDGET_LABEL[id]} hoogte`}><SelectValue /></SelectTrigger><SelectContent><SelectItem value="auto">Auto</SelectItem><SelectItem value="medium">Hoog</SelectItem><SelectItem value="tall">Extra hoog</SelectItem></SelectContent></Select>
         <Button
           size="sm"
           variant="secondary"
-          className="absolute right-2 top-2 h-7 gap-1 text-xs"
+          className="ml-auto h-7 gap-1 text-xs"
           onClick={() => onToggle(id)}
           aria-label={`${WIDGET_LABEL[id]} ${hidden ? "tonen" : "verbergen"}`}
         >
           {hidden ? <Eye className="h-3.5 w-3.5" /> : <EyeOff className="h-3.5 w-3.5" />}
           {hidden ? "Tonen" : "Verbergen"}
         </Button>
+        </div>
       ) : null}
     </div>
   );
@@ -536,7 +552,7 @@ export function CommandCenter() {
     ...(!c?.guestbook30d ? [{ label: "Prikbord: 0", to: "/dashboard/bluesky" }] : []),
     ...(!c?.upcomingBookings ? [{ label: "Agenda: 0", to: "/agenda" }] : []),
   ];
-  const slot = (id: WidgetId) => ({ editing: isEditingDashboard, hidden: layout.hidden.includes(id), onToggle: layout.toggle });
+  const slot = (id: WidgetId) => ({ editing: isEditingDashboard, hidden: layout.hidden.includes(id), onToggle: layout.toggle, order: layout.order.indexOf(id), tile: layout.tiles[id], onMove: layout.move, onResize: layout.resize });
 
   return (
     <AppLayout
@@ -570,11 +586,15 @@ export function CommandCenter() {
           De cockpit kon niet synchroniseren. Probeer opnieuw met Sync.
         </p>
       ) : null}
+      {isEditingDashboard && <div className="mb-5 flex flex-wrap items-center gap-2 border-b border-border pb-4">
+        {DASHBOARD_WIDGETS.map(id => <Button key={id} variant={layout.hidden.includes(id) ? "outline" : "secondary"} size="sm" aria-pressed={!layout.hidden.includes(id)} onClick={() => layout.toggle(id)}><Plus className="size-3.5" />{WIDGET_LABEL[id]}</Button>)}
+        <Button variant="ghost" size="sm" onClick={layout.reset}>Indeling herstellen</Button>
+      </div>}
       <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="grid auto-rows-min grid-flow-dense gap-4 sm:grid-cols-2 xl:grid-cols-3">
           <SystemPulse items={pulse} />
 
-          {showRelays ? (
+          {showRelays || isEditingDashboard ? (
             <Slot id="relays" className="sm:col-span-2" {...slot("relays")}>
               <RelayWidget userId={user.id} connectedApps={c?.connectedApps ?? null} />
             </Slot>
@@ -594,33 +614,33 @@ export function CommandCenter() {
             <AgendaWidget c={c} />
           </Slot>
 
-          {inboxCount ? (
+          {inboxCount || isEditingDashboard ? (
             <Slot id="inbox" {...slot("inbox")}>
               <Widget
                 to="/dashboard/assets"
                 icon={Inbox}
                 eyebrow="Unified Inbox"
-                title={plural(inboxCount, "nieuw bericht", "nieuwe berichten")}
+                title={plural(inboxCount ?? 0, "nieuw bericht", "nieuwe berichten")}
                 hint={`${plural(c?.unreadNotifications ?? 0, "melding", "meldingen")} · ${plural(c?.openQuestions ?? 0, "open vraag", "open vragen")}`}
               />
             </Slot>
           ) : null}
 
-          {c?.guestbook30d ? (
+          {c?.guestbook30d || isEditingDashboard ? (
             <Slot id="social" {...slot("social")}>
               <Widget
                 to="/dashboard/bluesky"
                 icon={AtSign}
                 eyebrow="Social & Prikbord"
-                title={plural(c.guestbook30d, "prikbord-bericht", "prikbord-berichten")}
+                title={plural(c?.guestbook30d ?? 0, "prikbord-bericht", "prikbord-berichten")}
                 hint="Laatste 30 dagen · beheer je Mastodon/Bluesky feed op je hub."
               />
             </Slot>
           ) : null}
 
-          {c?.openQuestions ? (
+          {c?.openQuestions || isEditingDashboard ? (
             <Slot id="qa" className="sm:col-span-2" {...slot("qa")}>
-              <Widget icon={MessageCircleQuestion} eyebrow="Anonieme Inbox" title={plural(c.openQuestions, "open bericht", "open berichten")} hint="Beantwoorden, delen als story of de afzender onzichtbaar dempen.">
+              <Widget icon={MessageCircleQuestion} eyebrow="Anonieme Inbox" title={plural(c?.openQuestions ?? 0, "open bericht", "open berichten")} hint="Beantwoorden, delen als story of de afzender onzichtbaar dempen.">
                 <QaInbox space={null} limit={3} compact />
               </Widget>
             </Slot>
@@ -629,6 +649,7 @@ export function CommandCenter() {
           <Slot id="hub" {...slot("hub")}>
             <Widget to="/studio" icon={LayoutTemplate} eyebrow="Profiel Hub" title="Hub beheren" hint="Blokken, thema en zichtbaarheid in de Studio." />
           </Slot>
+          <Slot id="connections" {...slot("connections")}><Widget to="/dashboard/identity" icon={Fingerprint} eyebrow="Gekoppelde apps" title={c?.connectedApps === null || c?.connectedApps === undefined ? "—" : plural(c.connectedApps, "app", "apps")} hint="Actieve toestemmingen voor je identiteit." /></Slot>
         </div>
 
         <ChronosStream events={c?.events ?? []} syncing={state.syncing} />
