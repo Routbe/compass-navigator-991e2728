@@ -1,5 +1,10 @@
 # Repository import
 
+## Complete sitemap request
+- [x] Audit public route sources and documentation catalogue; add 16 missing tools/information pages. Coverage test includes every static indexable About/Info/content route and rejects unclassified additions; private, redirect-only, token and empty query-payload pages remain excluded.
+- [x] Audit all lastmod sources: retain article frontmatter and profile/calendar row timestamps; no current/build/generation dates added and no workspace creation fallback. Replace arbitrary 45,000-row truncation with stable keyset reads; fail with uncached 503 rather than exceed XML limits. Align calendar member exclusions, require a renderable active booking type, and preserve alias/stealth privacy.
+- [x] Fix the actually served public robots.txt while preserving crawler blocks and matching existing private-path exclusions. Local four-part index/XML verified: 128 static URLs, 12 real public profiles, zero currently eligible workspaces/calendars; 14 tests passed and preview compilation OK. No live-data writes or production deployment performed; growth beyond 50,000 rows requires additional shards rather than silent omission.
+
 ## Current artwork and homepage request
 - [x] Replace the confirmed Lovable /favicon.ico with official ROUT SVG/PNG/ICO variants and version app-head icons; bare fallback returns ROUT for standalone images. Production rout.be still needs deployment; existing browser caches cannot be remotely erased.
 - [x] Refine engraved brand seal; regenerate seven public Wallet PNGs with actual rendered Inter text, including missing logo-shield.png; add it to press downloads. Query-style hero compatibility redirects public handles to the existing privacy-checked renderer; live member issuance remains blocked below.
