@@ -1,5 +1,10 @@
 # Repository import
 
+## Complete sitemap request
+- [ ] Audit every public content route and documentation catalogue entry; fill canonical sitemap omissions without indexing private or redirect-only routes.
+- [ ] Inspect all lastmod sources, dynamic pagination, visibility checks, error handling and robots declarations; preserve existing rout.be origin and sitemap structure.
+- [ ] Test static coverage and dynamic safeguards, then validate the local XML endpoints; production deployment remains separate.
+
 ## Current artwork and homepage request
 - [x] Replace the confirmed Lovable /favicon.ico with official ROUT SVG/PNG/ICO variants and version app-head icons; bare fallback returns ROUT for standalone images. Production rout.be still needs deployment; existing browser caches cannot be remotely erased.
 - [x] Refine engraved brand seal; regenerate seven public Wallet PNGs with actual rendered Inter text, including missing logo-shield.png; add it to press downloads. Query-style hero compatibility redirects public handles to the existing privacy-checked renderer; live member issuance remains blocked below.
