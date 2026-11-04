@@ -36,3 +36,14 @@
 - Additional homepage motion refinements remain outside this milestone.
 - [ ] Real-account widget reads, weather submission and Studio publish checks await session-signing settings and an authorized test session. No authenticated end-to-end result claimed.
 - Info/dev/safety article translations and full press-root localization are outside the completed About/Wallet/previews translation set.
+
+## Studio/profiel UI-perfectie (nov 2026)
+- [ ] Studio-tabs mogen nooit overlappen (alle talen): scrollbare balk, vaste knopbreedte.
+- [ ] Indicator van keuzebalken direct maar vloeiend (snelle spring).
+- [ ] Plak-een-link veld: ronde actieknop i.p.v. vierkant in kader.
+- [ ] Homepage QR Studio-voorbeeld: kleiner, geen wit vlak.
+- [ ] Docs-zoekbalk en instellingentabbar: zwevende afgeronde balk i.p.v. rand-tot-rand.
+- [ ] Profielmenu: workspacelijst inline uitklappen i.p.v. zwevend subkader (kader-in-kader).
+- [ ] Studio > Inhoud: aparte Widgets-map; Inbox/Prikbord/Badges altijd zichtbaar met schakelaar.
+- [ ] Profielweergave: fallback-widgets (inbox, prikbord, badges, bereik, YouTube) onder het blokkenraster, nooit boven bio/links.
+- [ ] Lagen-studio: consistente kaartstijl, duidelijkere groepen en uitleg.

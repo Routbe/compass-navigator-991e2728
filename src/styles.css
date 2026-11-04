@@ -1718,7 +1718,7 @@ html[data-liquid] [style*="--lg-filter"] { backdrop-filter: var(--lg-filter) !im
 .story-qr-tool { width: 100%; overflow: hidden; }
 .story-qr-tool .spatial-track { max-width: 410px; }
 .story-qr-workbench { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 64px; align-items: center; padding-top: 38px; }
-.story-qr-output { display: flex; flex-direction: column; align-items: center; background: var(--color-foreground); color: var(--color-background); border-radius: 6px; padding: 18px; }
+.story-qr-output { display: flex; flex-direction: column; align-items: center; color: var(--color-foreground); border: 1px solid var(--infra-edge, var(--color-border)); border-radius: 14px; padding: 22px 26px; }
 .story-qr-output svg { max-width: 100%; height: auto; }
 .story-everyday { position: relative; margin-top: 100px; }
 .story-everyday img { display: block; width: 100%; max-height: 700px; object-fit: cover; }

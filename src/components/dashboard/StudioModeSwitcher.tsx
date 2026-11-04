@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 import { useId, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
-import { premiumSpringPreset } from "@/lib/spatial-motion";
+import { snappySpringPreset } from "@/lib/spatial-motion";
 
 type Mode = "profile" | "tip";
 
@@ -22,7 +22,7 @@ export function StudioModeSwitcher({ mode, onChange, handle, enabled = true }: {
     <div role="tablist" aria-label="Studio" data-tour="studio-mode" onPointerLeave={() => setHovered(null)} className="spatial-track mb-3 flex flex-wrap gap-1 p-1">
       {destinations.map(({ id, Icon }) => (
         <Button key={id} variant="ghost" type="button" role="tab" aria-selected={mode === id} disabled={id === "tip" && !enabled} onPointerEnter={() => setHovered(id)} onFocus={() => setHovered(id)} onBlur={() => setHovered(null)} onClick={() => onChange(id)} className={`spatial-tab min-h-12 h-auto min-w-0 flex-1 justify-start gap-2 whitespace-normal rounded-lg border-0 px-3 py-2 text-left ${mode === id ? "text-foreground" : "text-muted-foreground"}`}>
-          {(hovered ?? mode) === id && <motion.span className="spatial-indicator" layoutId={`studio-indicator-${indicatorId}`} transition={reduced ? { duration: 0 } : premiumSpringPreset} aria-hidden />}
+          {(hovered ?? mode) === id && <motion.span className="spatial-indicator" layoutId={`studio-indicator-${indicatorId}`} transition={reduced ? { duration: 0 } : snappySpringPreset} aria-hidden />}
           <Icon className="size-4 shrink-0" aria-hidden />
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-medium">{t(id === "profile" ? "studio.mode.profile" : "studio.mode.tip")}</span>
