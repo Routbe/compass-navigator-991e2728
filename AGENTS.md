@@ -14,3 +14,8 @@
 - Keep database scripts and the standalone worker as source only until separately configured because importing code does not authorize live-data changes or service deployments.
 - Never import source credentials, project identity or generated route trees because those belong to the destination project.
 - Subdirectories have their own AGENTS.md; read them before changing files there.
+
+## Public documentation and editing
+- Localized MDX articles use locale-suffixed siblings and one canonical catalogue entry; loaders resolve localized head metadata. Why: translation must not duplicate navigation or sitemap paths.
+- Public profile layout options pass through the existing normalized design-layer payload and draft publishing flow. Why: ordering and link display must preserve privacy and revision checks.
+- Command Center layout is a user-scoped browser preference with allowlisted widgets and bounded dimensions. Why: layout customization must not widen access to account metrics.

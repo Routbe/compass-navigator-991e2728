@@ -15,6 +15,16 @@ import type { Plugin } from "vite";
 
 const docsCatalogPlugin: Plugin = {
   name: "rout-docs-catalog",
+  configureServer(server) {
+    const refresh = (file: string) => {
+      if (!file.includes("/src/content/") || !file.endsWith(".mdx")) return;
+      const catalog = server.moduleGraph.getModuleById("\0virtual:rout-docs");
+      if (catalog) server.moduleGraph.invalidateModule(catalog);
+      server.ws.send({ type: "full-reload" });
+    };
+    server.watcher.on("add", refresh);
+    server.watcher.on("unlink", refresh);
+  },
   handleHotUpdate({ file, server }) {
     if (!file.includes("/src/content/") || !file.endsWith(".mdx")) return;
     const catalog = server.moduleGraph.getModuleById("\0virtual:rout-docs");
