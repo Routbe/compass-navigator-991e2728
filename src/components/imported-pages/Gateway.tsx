@@ -32,7 +32,7 @@ import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
 import { useTypingPlaceholder } from "@/hooks/useTypingPlaceholder";
 import { SovereignVisual } from "@/components/gateway/SovereignVisual";
-import everydayImage from "@/assets/rout-qr-everyday.jpg";
+import everydayImage from "@/assets/rout-qr-everyday-refined.jpg";
 import { ProfileScene, QrScene, AnalyticsScene, SocialScene, WorkspaceScene, DeveloperScene } from "@/components/gateway/StoryVisuals";
 import { IdentityVisual, WalletVisual, CommerceVisual, IntegrationMesh } from "@/components/gateway/InfrastructureVisuals";
 

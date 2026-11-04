@@ -1,5 +1,11 @@
 # Repository import
 
+## Current artwork and homepage request
+- [x] Replace the confirmed Lovable /favicon.ico with official ROUT SVG/PNG/ICO variants and version app-head icons; bare fallback returns ROUT for standalone images. Production rout.be still needs deployment; existing browser caches cannot be remotely erased.
+- [x] Refine engraved brand seal; regenerate seven public Wallet PNGs with actual rendered Inter text, including missing logo-shield.png; add it to press downloads. Query-style hero compatibility redirects public handles to the existing privacy-checked renderer; live member issuance remains blocked below.
+- [x] Edit the scan photograph without changing composition, align the phone view and composite the same official-logo QR onto both surfaces. Decoder confirms https://rout.be/info/payment-pages in the final photograph.
+- [x] Add NL/EN/FR/DE website, appointment and creator-support demos, including time choices, contribution amounts, monthly/one-off and coffee/card/bank options. Desktop/mobile flows passed with no overflow or runtime errors; 20 focused tests passed, including no-network transaction safeguards.
+
 - [x] Inspect archive and preserve platform metadata.
 - [x] Import ROUT application source, assets and service scripts without credentials.
 - [x] Install dependencies and check public desktop/phone menus, all homepage chapters and scroll flow.

@@ -3,19 +3,23 @@ import { QRCodeSVG } from "qrcode.react";
 import { ArrowUpRight, Check, Fingerprint, Globe, Link2, Music2, ShieldCheck, CalendarDays, MessageCircle, Heart, Braces, Users } from "lucide-react";
 import { SpatialChoice } from "@/components/ui/spatial-choice";
 import { useI18n } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
+import { ProfileExampleDialog, type ProfileExampleAction } from "./ProfileExampleDialog";
 
 export function ProfileScene() {
   const { t } = useI18n();
+  const [action, setAction] = useState<ProfileExampleAction | null>(null);
   return <div className="story-profile-scene" aria-label={t("story.profile.title")}>
     <div className="story-orbit-label"><Globe /> rout.be / @you</div>
     <div className="story-profile-window acrylic-card">
       <div className="story-window-bar"><span>ROUT / PROFILE</span><span>{t("infra.example")}</span></div>
       <div className="story-profile-cover"><Fingerprint className="h-12 w-12" /></div>
       <div className="p-6 text-center"><h3 className="font-display text-3xl">{t("story.profile.demo")}</h3><p className="mt-2 text-xs text-muted-foreground">@you · ROUT ID</p>
-        <div className="story-profile-links mt-6"><span><Globe />{t("story.profile.website")}<ArrowUpRight /></span><span><CalendarDays />{t("story.booking.title")}<ArrowUpRight /></span><span><Heart />{t("infra.support")}<ArrowUpRight /></span></div>
+        <div className="story-profile-links mt-6">{([{ key: "website", label: t("story.profile.website"), Icon: Globe }, { key: "booking", label: t("story.booking.title"), Icon: CalendarDays }, { key: "support", label: t("infra.support"), Icon: Heart }] as const).map(({ key, label, Icon }) => <Button key={key} variant="outline" className="h-auto min-h-12 w-full justify-start gap-3 whitespace-normal px-3 py-3 text-left text-xs" onClick={() => setAction(key)}><Icon />{label}<ArrowUpRight /></Button>)}</div>
       </div>
     </div>
     <div className="story-side-note"><Music2 className="text-primary" /><span>Live Presence<br /><small>Spotify · Last.fm</small></span></div>
+    {action && <ProfileExampleDialog key={action} action={action} onClose={() => setAction(null)} />}
   </div>;
 }
 
