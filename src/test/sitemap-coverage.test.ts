@@ -17,7 +17,7 @@ describe("complete public sitemap coverage", () => {
       if (!match?.[1]) continue;
       const raw = match[1];
       const path = raw.replace(/_(?=\/|$)/g, "").replace(/\/$/, "") || "/";
-      if (raw.includes("$") || path.startsWith("/api/") || path.startsWith("/.well-known/") || /\.(xml|txt)$/.test(path) || EXCLUDED.has(path)) continue;
+      if (raw.startsWith("/_authenticated") || raw.includes("$") || path.startsWith("/api/") || path.startsWith("/.well-known/") || /\.(xml|txt)$/.test(path) || EXCLUDED.has(path)) continue;
       if (!/component\s*:/.test(source) || /component:\s*Outlet/.test(source) || /noindex/.test(source)) continue;
       // Redirect-only aliases have no content component; '/' has a signed-in redirect and stays included.
       if (!included.has(path)) missing.push(path);
