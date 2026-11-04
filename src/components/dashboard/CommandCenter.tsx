@@ -209,9 +209,8 @@ function QuickQr() {
           aria-label="URL voor een snelle QR-code"
           className="h-9 min-w-0 flex-1 bg-transparent px-2 font-mono text-sm outline-none placeholder:text-muted-foreground"
         />
-        <Button type="submit" size="sm" className="h-9 shrink-0 rounded-lg" disabled={!candidate}>
+        <Button type="submit" size="icon" className="size-9 shrink-0 rounded-full" disabled={!candidate} aria-label="QR maken" title="QR maken">
           <ArrowRight className="h-4 w-4" />
-          <span className="sr-only">QR maken</span>
         </Button>
       </form>
       {url ? (

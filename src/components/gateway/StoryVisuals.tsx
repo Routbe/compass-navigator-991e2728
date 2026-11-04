@@ -31,7 +31,7 @@ export function QrScene() {
     <div className="story-qr-tool acrylic-card"><div className="story-window-bar"><span>ROUT / QR STUDIO</span><span>{t("infra.example")}</span></div>
       <div className="p-5 sm:p-8"><SpatialChoice<"url" | "contact" | "wifi"> label={t("story.qr.types")} value={kind} onChange={setKind} options={[{ value: "url", label: <><Link2 />URL</> }, { value: "contact", label: <><Users />vCard</> }, { value: "wifi", label: <><Globe />Wi-Fi</> }]} />
       <div className="story-qr-workbench"><div className="space-y-6"><div><span className="story-small-label">{t("story.qr.destination")}</span><div className="spatial-input mt-3 break-all rounded-md p-4 font-mono text-xs">{kind === "url" ? values.url : kind === "contact" ? "ROUT / vCard 3.0" : "ROUT-example / WPA"}</div></div><div><span className="story-small-label">{t("story.qr.export")}</span><div className="mt-3 flex gap-4 font-mono text-sm"><span>SVG</span><span>PNG</span><span>PDF</span></div></div><p className="font-mono text-xs text-muted-foreground">{t("infra.localQr")}</p></div>
-      <div className="story-qr-output"><QRCodeSVG value={values[kind]} size={240} marginSize={2} bgColor="transparent" fgColor="currentColor" /><span className="mt-4 font-mono text-xs">{kind.toUpperCase()} / ROUT</span></div></div></div>
+      <div className="story-qr-output"><QRCodeSVG value={values[kind]} size={168} marginSize={2} bgColor="transparent" fgColor="currentColor" /><span className="mt-4 font-mono text-xs">{kind.toUpperCase()} / ROUT</span></div></div></div>
     </div>
   </div>;
 }
