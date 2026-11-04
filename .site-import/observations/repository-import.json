@@ -1,0 +1,14 @@
+{
+  "source": "https://github.com/Routbe/compass-navigator-29e1f8a8.git",
+  "kind": "source-repository",
+  "permissionConfirmed": true,
+  "credentialsCopied": false,
+  "databaseMigrationsApplied": false,
+  "sourceWebsiteComparison": "not applicable: repository supplied, not a deployed website",
+  "checks": {
+    "publicNavigation": "pending",
+    "tests": "pending",
+    "build": "pending",
+    "accountsAndData": "blocked: original service configuration unavailable"
+  }
+}
