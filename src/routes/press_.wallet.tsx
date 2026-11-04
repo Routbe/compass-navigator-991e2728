@@ -13,6 +13,7 @@ const FILES: PressFile[] = [
   { name: "Module: ROUT Card", size: "1860 × 620", ratio: "3", use: "Console → Image modules. Legt de drie scanlagen van de kaart uit.", href: "/assets/wallet/rout-card-module.png" },
   { name: "Module: Trust array", size: "1032 × 336", ratio: "3.07", use: "Console → Image modules. Vertrouwensbalk onderaan de pas.", href: "/assets/wallet/compliance-array.png" },
   { name: "Soeverein zegel", size: "660 × 660", ratio: "1", use: "Alternatief vierkant beeld voor modules of de uitgeversaccount.", href: "/assets/wallet/sovereign-seal-pbr.png" },
+  { name: "Logo · console alias", size: "660 × 660", ratio: "1", use: "Logo · ROUT", href: "/assets/wallet/logo-shield.png" },
 ];
 
 export const Route = createFileRoute("/press_/wallet")({
