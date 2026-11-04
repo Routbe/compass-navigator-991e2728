@@ -291,7 +291,11 @@ export function AddComponentModal({ open, onClose, onAdd, handle, onWidget }: Pr
     // "Socials icoon-rij" opens the full platform picker instead of adding Instagram directly.
     if (item.tag === "socials") return openCategory("socials");
     close();
-    if (isProfileSectionKind(item.kind)) { onAdd(item.kind); return; }
+    if (isProfileSectionKind(item.kind)) {
+      if (onWidget && ["questions", "guestbook", "badges"].includes(item.kind.slice(7))) onWidget(item.kind.slice(7) as WidgetId);
+      else onAdd(item.kind);
+      return;
+    }
     if (item.kind === "widget:youtube") { onAdd(item.kind); return; }
     if (item.kind.startsWith("widget:")) {
       const id = item.kind.slice(7) as WidgetId;

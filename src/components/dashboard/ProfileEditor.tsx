@@ -1180,6 +1180,8 @@ export function ProfileEditor({ variant = "verified", pageMode = "profile", onPa
               <LiveStatusAccordion prefs={prefs} setPref={setPref} composer={!isWorkspace && user ? { owner: user.id, handle: normalized || handle, space: alias ? "alias" : "root", blocks } : null} />
 
               <ProfileContentAccordion
+                designLayers={prefs.designLayers}
+                onDesignLayersChange={value => setPref("designLayers", value)}
                 cardEffects={prefs.cardEffects}
                 onCardEffectsChange={(value) => setPref("cardEffects", value)}
                 blocks={blocks}
