@@ -377,6 +377,7 @@ import { Route as ApiPublicYoutubeCardRouteImport } from './routes/api_.public.y
 import { Route as ApiPublicYoutubePushRouteImport } from './routes/api_.public.youtube.push'
 import { Route as ApiUserVaultExportRouteImport } from './routes/api_.user.vault.export'
 import { Route as ApiWalletKindIdRouteImport } from './routes/api_.wallet.$kind.$id'
+import { Route as ApiWalletRenderHeroDotpngRouteImport } from './routes/api_.wallet.render.hero[.]png'
 import { Route as SupportWorkspaceGettingStartedInviteTeamRouteImport } from './routes/support.workspace.getting-started.invite-team'
 import { Route as SupportWorkspaceGettingStartedSetupBusinessAccountRouteImport } from './routes/support.workspace.getting-started.setup-business-account'
 import { Route as SupportWorkspaceGettingStartedWhatIsAWorkspaceRouteImport } from './routes/support.workspace.getting-started.what-is-a-workspace'
@@ -2329,6 +2330,12 @@ const ApiWalletKindIdRoute = ApiWalletKindIdRouteImport.update({
   path: '/api/wallet/$kind/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWalletRenderHeroDotpngRoute =
+  ApiWalletRenderHeroDotpngRouteImport.update({
+    id: '/api_/wallet/render/hero.png',
+    path: '/api/wallet/render/hero.png',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SupportWorkspaceGettingStartedInviteTeamRoute =
   SupportWorkspaceGettingStartedInviteTeamRouteImport.update({
     id: '/workspace/getting-started/invite-team',
@@ -2835,6 +2842,7 @@ export interface FileRoutesByFullPath {
   '/api/public/youtube/push': typeof ApiPublicYoutubePushRoute
   '/api/user/vault/export': typeof ApiUserVaultExportRoute
   '/api/wallet/$kind/$id': typeof ApiWalletKindIdRoute
+  '/api/wallet/render/hero.png': typeof ApiWalletRenderHeroDotpngRoute
   '/support/workspace/getting-started/invite-team': typeof SupportWorkspaceGettingStartedInviteTeamRoute
   '/support/workspace/getting-started/setup-business-account': typeof SupportWorkspaceGettingStartedSetupBusinessAccountRoute
   '/support/workspace/getting-started/what-is-a-workspace': typeof SupportWorkspaceGettingStartedWhatIsAWorkspaceRoute
@@ -3210,6 +3218,7 @@ export interface FileRoutesByTo {
   '/api/public/youtube/push': typeof ApiPublicYoutubePushRoute
   '/api/user/vault/export': typeof ApiUserVaultExportRoute
   '/api/wallet/$kind/$id': typeof ApiWalletKindIdRoute
+  '/api/wallet/render/hero.png': typeof ApiWalletRenderHeroDotpngRoute
   '/support/workspace/getting-started/invite-team': typeof SupportWorkspaceGettingStartedInviteTeamRoute
   '/support/workspace/getting-started/setup-business-account': typeof SupportWorkspaceGettingStartedSetupBusinessAccountRoute
   '/support/workspace/getting-started/what-is-a-workspace': typeof SupportWorkspaceGettingStartedWhatIsAWorkspaceRoute
@@ -3604,6 +3613,7 @@ export interface FileRoutesById {
   '/api_/public/youtube/push': typeof ApiPublicYoutubePushRoute
   '/api_/user/vault/export': typeof ApiUserVaultExportRoute
   '/api_/wallet/$kind/$id': typeof ApiWalletKindIdRoute
+  '/api_/wallet/render/hero.png': typeof ApiWalletRenderHeroDotpngRoute
   '/support/workspace/getting-started/invite-team': typeof SupportWorkspaceGettingStartedInviteTeamRoute
   '/support/workspace/getting-started/setup-business-account': typeof SupportWorkspaceGettingStartedSetupBusinessAccountRoute
   '/support/workspace/getting-started/what-is-a-workspace': typeof SupportWorkspaceGettingStartedWhatIsAWorkspaceRoute
@@ -3998,6 +4008,7 @@ export interface FileRouteTypes {
     | '/api/public/youtube/push'
     | '/api/user/vault/export'
     | '/api/wallet/$kind/$id'
+    | '/api/wallet/render/hero.png'
     | '/support/workspace/getting-started/invite-team'
     | '/support/workspace/getting-started/setup-business-account'
     | '/support/workspace/getting-started/what-is-a-workspace'
@@ -4373,6 +4384,7 @@ export interface FileRouteTypes {
     | '/api/public/youtube/push'
     | '/api/user/vault/export'
     | '/api/wallet/$kind/$id'
+    | '/api/wallet/render/hero.png'
     | '/support/workspace/getting-started/invite-team'
     | '/support/workspace/getting-started/setup-business-account'
     | '/support/workspace/getting-started/what-is-a-workspace'
@@ -4766,6 +4778,7 @@ export interface FileRouteTypes {
     | '/api_/public/youtube/push'
     | '/api_/user/vault/export'
     | '/api_/wallet/$kind/$id'
+    | '/api_/wallet/render/hero.png'
     | '/support/workspace/getting-started/invite-team'
     | '/support/workspace/getting-started/setup-business-account'
     | '/support/workspace/getting-started/what-is-a-workspace'
@@ -4999,6 +5012,7 @@ export interface RootRouteChildren {
   ApiPublicYoutubePushRoute: typeof ApiPublicYoutubePushRoute
   ApiUserVaultExportRoute: typeof ApiUserVaultExportRoute
   ApiWalletKindIdRoute: typeof ApiWalletKindIdRoute
+  ApiWalletRenderHeroDotpngRoute: typeof ApiWalletRenderHeroDotpngRoute
   ApiPublicBookingsIdActionRoute: typeof ApiPublicBookingsIdActionRoute
   ApiWalletRenderCardIdHeroDotpngRoute: typeof ApiWalletRenderCardIdHeroDotpngRoute
 }
@@ -7581,6 +7595,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiWalletKindIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api_/wallet/render/hero.png': {
+      id: '/api_/wallet/render/hero.png'
+      path: '/api/wallet/render/hero.png'
+      fullPath: '/api/wallet/render/hero.png'
+      preLoaderRoute: typeof ApiWalletRenderHeroDotpngRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support/workspace/getting-started/invite-team': {
       id: '/support/workspace/getting-started/invite-team'
       path: '/workspace/getting-started/invite-team'
@@ -8543,6 +8564,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPublicYoutubePushRoute: ApiPublicYoutubePushRoute,
   ApiUserVaultExportRoute: ApiUserVaultExportRoute,
   ApiWalletKindIdRoute: ApiWalletKindIdRoute,
+  ApiWalletRenderHeroDotpngRoute: ApiWalletRenderHeroDotpngRoute,
   ApiPublicBookingsIdActionRoute: ApiPublicBookingsIdActionRoute,
   ApiWalletRenderCardIdHeroDotpngRoute: ApiWalletRenderCardIdHeroDotpngRoute,
 }
