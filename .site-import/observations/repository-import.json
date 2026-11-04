@@ -6,9 +6,10 @@
   "databaseMigrationsApplied": false,
   "sourceWebsiteComparison": "not applicable: repository supplied, not a deployed website",
   "checks": {
-    "publicNavigation": "pending",
-    "tests": "pending",
-    "build": "pending",
-    "accountsAndData": "blocked: original service configuration unavailable"
+    "publicNavigation": "desktop and phone menus, all nine homepage chapters and bottom scrolling verified; Studio redirects signed-out visitors to /auth/sign-in",
+    "tests": "28 passed; 1 pre-existing docs-catalog ordering assertion failed; source implementation is unchanged",
+    "build": "OK",
+    "accountsAndData": "blocked: original database and service credentials unavailable",
+    "qrGeneration": "blocked: Studio requires sign-in; /qr-code-generator is documentation, not the generator"
   }
 }
