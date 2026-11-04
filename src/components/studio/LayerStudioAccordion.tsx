@@ -19,6 +19,7 @@ import {
   MAX_BACKGROUNDS,
   MAX_DECORATIONS,
   SECTION_LABEL,
+  IDENTITY_PARTS,
   applyPreset,
   isEmptyLayers,
   normalizeDesignLayers,
@@ -44,7 +45,8 @@ function move<T>(list: T[], from: number, to: number): T[] {
   if (to < 0 || to >= list.length) return list;
   const next = [...list];
   const [item] = next.splice(from, 1);
-  next.splice(to, 0, item!);
+  if (item === undefined) return list;
+  next.splice(to, 0, item);
   return next;
 }
 
@@ -118,6 +120,22 @@ export function LayerStudioAccordion({ value, onChange, blocks }: Props) {
         <span className="flex items-center gap-2"><StudioSectionIcon kind="layers" /> Lagen-studio</span>
       </AccordionTrigger>
       <AccordionContent className="space-y-6 pb-5">
+        <section className="space-y-3">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Profielkop</p>
+          {(layers.identityOrder ?? [...IDENTITY_PARTS]).map((part, i, order) => <div key={part} className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+            <span className="text-sm">{{ name: "Naam", handle: "@gebruikersnaam", location: "Locatie", bio: "Bio" }[part]}</span>
+            <div className="flex gap-1">
+              <Button type="button" variant="ghost" size="icon" disabled={i === 0} aria-label={`${part} omhoog`} onClick={() => set({ ...layers, identityOrder: move(order, i, i - 1) })}><ArrowUp className="size-4" /></Button>
+              <Button type="button" variant="ghost" size="icon" disabled={i === order.length - 1} aria-label={`${part} omlaag`} onClick={() => set({ ...layers, identityOrder: move(order, i, i + 1) })}><ArrowDown className="size-4" /></Button>
+            </div>
+          </div>)}
+          <Button type="button" variant="ghost" size="sm" onClick={() => set({ ...layers, identityOrder: [...IDENTITY_PARTS] })}>Standaardvolgorde</Button>
+          <Label>Linkweergave</Label>
+          <Select value={layers.linkDisplay ?? "rows"} onValueChange={(v) => set({ ...layers, linkDisplay: v as "rows" | "icons" | "both" })}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent><SelectItem value="rows">Linkbalken</SelectItem><SelectItem value="icons">Pictogrammen onder bio</SelectItem><SelectItem value="both">Balken en pictogrammen</SelectItem></SelectContent>
+          </Select>
+        </section>
         {/* Presets */}
         <section className="space-y-2">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">Presets</p>

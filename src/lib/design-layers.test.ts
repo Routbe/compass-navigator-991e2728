@@ -1,8 +1,21 @@
 import { describe, expect, it } from "vitest";
-import { MAX_BACKGROUNDS, MAX_DECORATIONS, normalizeDesignLayers, safeImageUrl } from "./design-layers";
+import { MAX_BACKGROUNDS, MAX_DECORATIONS, normalizeDesignLayers, safeImageUrl, profileHandleLabel, IDENTITY_PARTS } from "./design-layers";
 import { normalizeLayersPref } from "./profile-display";
 
 describe("design layers normalization", () => {
+  it("defaults identity to name, handle, location and bio", () => {
+    expect(normalizeDesignLayers({}).identityOrder ?? IDENTITY_PARTS).toEqual(["name", "handle", "location", "bio"]);
+  });
+  it("preserves a chosen identity order, removes duplicates and appends missing fields", () => {
+    expect(normalizeDesignLayers({ identityOrder: ["bio", "bio", "script", "handle"] }).identityOrder).toEqual(["bio", "handle", "name", "location"]);
+  });
+  it("keeps both link representations independent from the button shape", () => {
+    expect(normalizeDesignLayers({ linkDisplay: "both" }).linkDisplay).toBe("both");
+    expect(normalizeDesignLayers({ linkDisplay: "javascript" }).linkDisplay).toBeUndefined();
+  });
+  it("formats root handles without the site address", () => { expect(profileHandleLabel("/@alice")).toBe("@alice"); });
+  it("keeps the alias namespace visible", () => { expect(profileHandleLabel("/u/alice")).toBe("@u/alice"); });
+  it("keeps the workspace namespace visible", () => { expect(profileHandleLabel("/w/team")).toBe("@w/team"); });
   it("keeps every section exactly once", () => {
     const l = normalizeDesignLayers({ sections: [{ id: "footer", visible: false }, { id: "footer" }, { id: "bogus" }] });
     expect(l.sections.map((s) => s.id)).toEqual(["footer", "avatar", "blocks", "fx", "decorations"]);

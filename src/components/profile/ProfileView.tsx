@@ -29,6 +29,8 @@ import { cn } from "@/lib/utils";
 import {
   backgroundLayerStyle,
   blockStyleOverride,
+  identityOrderOf,
+  profileHandleLabel,
   normalizeDesignLayers,
   sectionOrder,
   sectionVisible,
@@ -223,7 +225,7 @@ export function ProfileView({
     const out = glass ? { ...(withText ?? {}), ...glass } : withText;
     return out && !isPlainLinkKind(kind) ? clampWidgetRadius(out) : out;
   };
-  const linkMode = prefs.buttonShape;
+  const linkMode = layers.linkDisplay ?? (prefs.buttonShape === "icon" ? "icons" : prefs.buttonShape === "bar" ? "rows" : "both");
   const iconOnly = false;
   const iconLinks = blocks.filter((b) => isPlainLinkBlock(b) && !b.hidden);
   /** Eigen canvas- en patroonkleuren overschrijven het thema, indien gekozen. */
@@ -484,9 +486,10 @@ export function ProfileView({
         <ProfileStatus handle={profile.username ?? null} prefs={prefs} background={t.card} />
         </div>
 
+        <div className="flex w-full flex-col items-center">
         <h1
           className="mt-4 flex max-w-full flex-wrap items-center justify-center gap-1.5 break-words text-center font-display text-2xl"
-          style={prefs.typographyCustom || prefs.customDesign ? { fontFamily: fonts.heading, fontSize: `${prefs.titleScale}%`, letterSpacing: prefs.titleLetterSpacing, } : undefined}
+          style={{ order: identityOrderOf(layers, "name"), ...(prefs.typographyCustom || prefs.customDesign ? { fontFamily: fonts.heading, fontSize: `${prefs.titleScale}%`, letterSpacing: prefs.titleLetterSpacing } : {}) }}
         >
           <span
             key={`${prefs.titleEntrance}-${prefs.titleReveal}`}
@@ -536,27 +539,28 @@ export function ProfileView({
             target="_blank"
             rel="noopener noreferrer"
             className="mt-1 break-all text-center font-mono text-sm underline-offset-4 transition-opacity hover:underline hover:opacity-80"
-            style={{ color: t.muted }}
+            style={{ color: t.muted, order: identityOrderOf(layers, "handle") }}
           >
-            {`@${shownPath.slice(1)}`}
+            {profileHandleLabel(shownPath)}
           </a>
         )}
         {prefs.locationVisible && prefs.locationBadge && (
           <span
             className="mt-2 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium"
-            style={{ border: `1px solid ${t.border}`, color: t.muted }}
+            style={{ border: `1px solid ${t.border}`, color: t.muted, order: identityOrderOf(layers, "location") }}
           >
             {prefs.locationBadge}
           </span>
         )}
 
         {(shownBio || profile.tagline) && (
-          <p className="mt-3 max-w-sm text-balance text-center text-sm" style={{ color: t.muted }}>
+          <p className="mt-3 max-w-sm text-balance text-center text-sm" style={{ color: t.muted, order: identityOrderOf(layers, "bio") }}>
             {shownBio || profile.tagline}
           </p>
         )}
 
-        {linkMode !== "bar" && iconLinks.length > 0 && (
+        </div>
+        {linkMode !== "rows" && iconLinks.length > 0 && (
           <nav aria-label={tx("profile.links", { defaultValue: "Links" })} className="mt-4 flex max-w-sm flex-wrap items-center justify-center gap-2.5">
             {iconLinks.map((b) => (
               <a key={b.id} href={blockHref(b)} target="_blank" rel="noopener noreferrer" onClick={() => trackClick(b.id, b.label)} aria-label={b.label} title={b.label}
@@ -705,7 +709,7 @@ export function ProfileView({
             <p className="text-center text-sm" style={{ color: t.muted }}>
                {tx("profile.noLinks")} </p>
           )}
-          {blocks.filter((b) => linkMode !== "icon" || !isPlainLinkBlock(b)).map((b) => bentoCell(b,
+          {blocks.filter((b) => linkMode !== "icons" || !isPlainLinkBlock(b)).map((b) => bentoCell(b,
             b.kind === "widget:guestbook" ? (
               profile.username && prefs.guestbookEnabled ? <div key={b.id} className="w-full lg:col-span-full"><ProfileGuestbook handle={profile.username} theme={t} /></div> : null
             ) : b.kind === "widget:badges" ? (
