@@ -37,19 +37,3 @@ function Page() {
   </PressSubpage>;
 }
 
-/* Original placement copy retained below as source reference. */
-function OriginalPlacementCopy() {
-  return <PressSubpage kicker="Perskit · Google Wallet" title="Google Wallet-beelden" intro="Elk beeld is op de afmeting die Google aanbeveelt en wordt in code getekend uit het officiële ROUT-logo. Download ze en zet ze in de Google Wallet-console bij de bijhorende velden.">
-    <PressFileGrid files={FILES} />
-    <section className="mt-14 max-w-3xl text-sm leading-7 text-muted-foreground">
-      <h2 className="font-display text-2xl text-foreground">Zo plaats je ze</h2>
-      <ol className="mt-4 list-decimal space-y-2 pl-5">
-        <li>Open de Google Pay & Wallet-console en kies de klasse van de ROUT-pas.</li>
-        <li>Upload het logo en het brede logo; laat de achtergrondkleur leeg, want ROUT zet per lid de profielkleur.</li>
-        <li>Upload de hero-afbeelding als standaard. Bij uitgifte vervangt ROUT die met de persoonlijke kaart van het lid.</li>
-        <li>Voeg de ROUT Card- en trust-modules toe onder afbeeldingsmodules.</li>
-      </ol>
-      <p className="mt-4">Een pas kan pas toegevoegd worden zodra de uitgever-ID en het serviceaccount van Google Wallet zijn ingesteld.</p>
-    </section>
-  </PressSubpage>;
-}
