@@ -3,11 +3,14 @@ import { Download } from "lucide-react";
 import type { ReactNode } from "react";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n";
 
 export type PressFile = { name: string; size: string; use: string; href: string; ratio: string };
 
 export function PressNav() {
-  const items = [["/press", "Logo's & merk"], ["/press/wallet", "Google Wallet-beelden"], ["/press/previews", "Deelafbeeldingen"]] as const;
+  const { locale } = useI18n();
+  const labels = { nl: ["Logo's & merk", "Google Wallet-beelden", "Deelafbeeldingen"], en: ["Logos & brand", "Google Wallet artwork", "Share previews"], fr: ["Logos & marque", "Visuels Google Wallet", "Aperçus de partage"], de: ["Logos & Marke", "Google-Wallet-Bilder", "Vorschaubilder"] }[locale];
+  const items = [["/press", labels[0]], ["/press/wallet", labels[1]], ["/press/previews", labels[2]]] as const;
   return <nav aria-label="Perskit" className="mt-8 flex flex-wrap gap-2">
     {items.map(([to, label]) => <Button key={to} asChild variant="outline" size="sm"><Link to={to} activeOptions={{ exact: true }} activeProps={{ "aria-current": "page" }}>{label}</Link></Button>)}
   </nav>;
@@ -26,6 +29,8 @@ export function PressSubpage({ kicker, title, intro, children }: { kicker: strin
 }
 
 export function PressFileGrid({ files }: { files: PressFile[] }) {
+  const { locale } = useI18n();
+  const download = { nl: "Download", en: "Download", fr: "Télécharger", de: "Herunterladen" }[locale];
   return <ul className="mt-10 grid gap-6 sm:grid-cols-2">
     {files.map((f) => <li key={f.href} className="overflow-hidden rounded-2xl border border-border bg-card">
       <div className="flex items-center justify-center bg-muted p-4" style={{ aspectRatio: "16 / 9" }}>
@@ -37,7 +42,7 @@ export function PressFileGrid({ files }: { files: PressFile[] }) {
           <p className="mt-1 font-mono text-xs text-muted-foreground">{f.size} · PNG</p>
           <p className="mt-2 text-sm text-muted-foreground">{f.use}</p>
         </div>
-        <Button asChild variant="outline" size="icon" aria-label={`${f.name} downloaden`}><a href={f.href} download><Download /></a></Button>
+        <Button asChild variant="outline" size="icon" aria-label={`${download}: ${f.name}`}><a href={f.href} download><Download /></a></Button>
       </div>
     </li>)}
   </ul>;
