@@ -1195,15 +1195,18 @@ export function ProfileEditor({ variant = "verified", pageMode = "profile", onPa
                 }}
                 onWidget={(id) => {
                   if (id === "questions") {
+                    if (!blocks.some(b => b.kind === "widget:questions")) addBlock("widget:questions");
                     setPref("questionsEnabled", true);
                     setPref("qaOnHub", true);
                     toast.success(t("studio.editor.questionsOn"));
                   } else if (id === "badges") {
+                    if (!blocks.some(b => b.kind === "widget:badges")) addBlock("widget:badges");
                     setPref("badgeShowcaseVisible", true);
                     toast.success(t("studio.editor.badgesOn"));
                   } else if (id === "youtube") {
                     addBlock("widget:youtube");
                   } else {
+                    if (!blocks.some(b => b.kind === "widget:guestbook")) addBlock("widget:guestbook");
                     setPref("guestbookEnabled", true);
                     toast.info(t("studio.editor.boardHelp"));
                   }

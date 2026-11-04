@@ -589,7 +589,7 @@ export function ProfileView({
         <ProfilePassport handle={profile.username} theme={t} />
         {profile.username && <ConnectedApps handle={profile.username} />}
         {profile.username && prefs.guestbookEnabled && usesSectionFallback(profile.blocks, "widget:guestbook") && <ProfileGuestbook handle={profile.username} theme={t} />}
-        {profile.username && qaSpace && prefs.questionsEnabled && prefs.qaOnHub && <ProfileQuestions handle={profile.username} space={qaSpace} theme={t} prefs={prefs} preview={preview} />}
+        {profile.username && qaSpace && prefs.questionsEnabled && prefs.qaOnHub && usesSectionFallback(profile.blocks, "widget:questions") && <ProfileQuestions handle={profile.username} space={qaSpace} theme={t} prefs={prefs} preview={preview} />}
         {profile.username && !profile.blocks.some(b => b.kind === "event_list") && <ProfileEventList handle={profile.username} space={free ? "alias" : "root"} style={styleFor("event_list")} />}
         {profile.username && !profile.blocks.some(b => b.kind === "feedback") && <ProfileFeedback handle={profile.username} space={free ? "alias" : "root"} style={styleFor("feedback")} />}
 
@@ -712,7 +712,9 @@ export function ProfileView({
                {tx("profile.noLinks")} </p>
           )}
           {blocks.filter((b) => linkMode !== "icons" || !isPlainLinkBlock(b)).map((b) => bentoCell(b,
-            b.kind === "widget:guestbook" ? (
+            b.kind === "widget:questions" ? (
+              profile.username && qaSpace && prefs.questionsEnabled && prefs.qaOnHub ? <div key={b.id} className="w-full"><ProfileQuestions handle={profile.username} space={qaSpace} theme={t} prefs={prefs} preview={preview} /></div> : null
+            ) : b.kind === "widget:guestbook" ? (
               profile.username && prefs.guestbookEnabled ? <div key={b.id} className="w-full lg:col-span-full"><ProfileGuestbook handle={profile.username} theme={t} /></div> : null
             ) : b.kind === "widget:badges" ? (
               prefs.badgeShowcaseVisible ? <div key={b.id} className="w-full lg:col-span-full"><BadgeShowcase userId={profile.id} theme={t} /></div> : null
