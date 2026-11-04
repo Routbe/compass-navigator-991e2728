@@ -20,6 +20,11 @@ it("never lists signed-in pages", () => {
   expect(STATIC_SITEMAP_ENTRIES.map((e) => e.path)).not.toContain("/dashboard");
 });
 
+it("includes the public Wallet and preview artwork pages", () => {
+  expect(STATIC_SITEMAP_ENTRIES.map(e => e.path)).toContain("/press/wallet");
+  expect(STATIC_SITEMAP_ENTRIES.map(e => e.path)).toContain("/press/previews");
+});
+
 it("writes absolute rout.be URLs once each", () => {
   const xml = buildSitemapXml("https://rout.be", [
     { path: "/", changefreq: "weekly", priority: 1 },

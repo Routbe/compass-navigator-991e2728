@@ -3,6 +3,16 @@ import { MAX_BACKGROUNDS, MAX_DECORATIONS, normalizeDesignLayers, safeImageUrl, 
 import { normalizeLayersPref } from "./profile-display";
 
 describe("design layers normalization", () => {
+  it("bounds profile component widths to one or two columns", () => {
+    const d = normalizeDesignLayers({ blockStyles: { a: { width: 2 }, b: { width: 900 } } });
+    expect(d.blockStyles.a?.width).toBe(2);
+    expect(d.blockStyles.b?.width).toBeUndefined();
+  });
+  it("keeps only auto, medium or tall component heights", () => {
+    const d = normalizeDesignLayers({ blockStyles: { a: { height: "tall" }, b: { height: "9999px" } } });
+    expect(d.blockStyles.a?.height).toBe("tall");
+    expect(d.blockStyles.b?.height).toBeUndefined();
+  });
   it("defaults identity to name, handle, location and bio", () => {
     expect(normalizeDesignLayers({}).identityOrder ?? IDENTITY_PARTS).toEqual(["name", "handle", "location", "bio"]);
   });
