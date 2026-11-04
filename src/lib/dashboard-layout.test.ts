@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { DASHBOARD_WIDGETS, moveDashboardWidget, normalizeDashboardLayout } from "./dashboard-layout";
 describe("Command Center layout", () => {
+  it("offers music, weather, smart-home, fitness and visitor widgets", () => {
+    for (const id of ["spotify", "weather", "smarthome", "fitness", "smart", "visitors"]) expect(DASHBOARD_WIDGETS).toContain(id);
+  });
   it("keeps only known widgets and appends missing ones", () => {
     const layout = normalizeDashboardLayout({ order: ["qr", "qr", "admin"], hidden: ["qa", "admin"] });
     expect(layout.order[0]).toBe("qr"); expect(layout.order).toHaveLength(DASHBOARD_WIDGETS.length); expect(layout.hidden).toEqual(["qa"]);

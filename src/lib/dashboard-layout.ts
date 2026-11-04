@@ -1,4 +1,5 @@
-export const DASHBOARD_WIDGETS = ["presence", "relays", "hub", "qr", "inbox", "agenda", "social", "qa", "connections"] as const;
+export const DASHBOARD_WIDGETS = ["presence", "relays", "hub", "qr", "inbox", "agenda", "social", "qa", "connections", "visitors", "spotify", "weather", "smarthome", "fitness", "smart"] as const;
+export const OPTIONAL_DASHBOARD_WIDGETS = ["connections", "visitors", "spotify", "weather", "smarthome", "fitness", "smart"] as const;
 export type DashboardWidgetId = typeof DASHBOARD_WIDGETS[number];
 export type DashboardTile = { width: 1 | 2 | 3; height: "auto" | "medium" | "tall" };
 export type DashboardLayout = { order: DashboardWidgetId[]; hidden: DashboardWidgetId[]; tiles: Partial<Record<DashboardWidgetId, DashboardTile>> };

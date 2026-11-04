@@ -17,5 +17,6 @@
 
 ## Public documentation and editing
 - Localized MDX articles use locale-suffixed siblings and one canonical catalogue entry; loaders resolve localized head metadata. Why: translation must not duplicate navigation or sitemap paths.
-- Public profile layout options pass through the existing normalized design-layer payload and draft publishing flow. Why: ordering and link display must preserve privacy and revision checks.
+- Public profile layout options and bounded component dimensions pass through the existing normalized design-layer payload and draft publishing flow; widget theme overrides form a separate cascade from links. Why: sizing and styling must preserve privacy, usability and revision checks.
 - Command Center layout is a user-scoped browser preference with allowlisted widgets and bounded dimensions. Why: layout customization must not widen access to account metrics.
+- Private dashboard integrations use owner-authenticated functions, fixed weather-provider endpoints and the existing sealed Spotify connection; unsupported providers expose no device controls. Why: public profiles must never inherit private device or health access.

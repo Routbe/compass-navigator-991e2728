@@ -31,6 +31,7 @@ type SetPref = <K extends keyof ProfileDisplayPrefs>(key: K, value: ProfileDispl
 export const SCOPES: { id: ThemeScope; short: string; label: string }[] = [
   { id: "all", short: "🌐 Alles", label: "🌐 Alle elementen" },
   { id: "links", short: "🔗 Links", label: "🔗 Links" },
+  { id: "widgets", short: "Widgets", label: "Widgets" },
   { id: "socials", short: "📱 Socials", label: "📱 Socials" },
   { id: "booking", short: "📅 Boeken", label: "📅 Boekingen" },
   { id: "board", short: "💬 Prikbord", label: "💬 Prikbord" },
@@ -40,7 +41,7 @@ export const SCOPES: { id: ThemeScope; short: string; label: string }[] = [
 ];
 
 /** Profiel-scopes: vragen en antwoorden zijn één venster, dus één keuze. */
-export const PROFILE_SCOPES: readonly ThemeScope[] = ["all", "links", "socials", "booking", "board", "presence", "questions"];
+export const PROFILE_SCOPES: readonly ThemeScope[] = ["all", "links", "widgets", "socials", "booking", "board", "presence", "questions"];
 
 const GLASS_TYPES: { id: Exclude<GlassStyle, "solid">; label: string }[] = [
   { id: "frosted-light", label: "Light Glass" },
@@ -76,6 +77,7 @@ const GLASS_RECIPES: { id: string; label: string; patch: ScopeOverride }[] = [
 
 const glassTargetOf = (scope: ThemeScope): (keyof GlassTargets)[] =>
   scope === "all" ? ["links", "presence", "board", "booking"]
+    : scope === "widgets" ? ["presence", "board", "booking"]
     : scope === "links" || scope === "socials" ? ["links"]
     : scope === "booking" ? ["booking"]
     : scope === "presence" ? ["presence"]
@@ -105,7 +107,9 @@ export function ScopedThemeBar({ prefs, setPref, scope = "all", showTypography =
   const glassOn = tokens.glassStyle !== "solid";
   useLiquidGlassRuntime();
 
-  const patch = (p: ScopeOverride) => {
+  const widgetScope = ["widgets", "booking", "board", "presence", "questions", "answers"].includes(scope);
+  const patch = (input: ScopeOverride) => {
+    const p = widgetScope && input.buttonRadius === "pill" ? { ...input, buttonRadius: "rounded" as const } : input;
     if (p.glassStyle && p.glassStyle !== "solid") {
       const next = { ...prefs.glassTargets };
       for (const k of glassTargetOf(scope)) next[k] = true;
@@ -129,7 +133,7 @@ export function ScopedThemeBar({ prefs, setPref, scope = "all", showTypography =
   };
 
   const variants = BUTTON_VARIANTS.filter((v) => (OVERRIDE_BUTTON_VARIANTS as readonly string[]).includes(v.id));
-  const radii = BUTTON_RADII.filter((r) => (OVERRIDE_BUTTON_RADII as readonly string[]).includes(r.id));
+  const radii = BUTTON_RADII.filter((r) => (OVERRIDE_BUTTON_RADII as readonly string[]).includes(r.id) && (!widgetScope || r.id !== "pill"));
   const sample = glassSurfaceStyle(tokens, scope === "all" ? "links" : (scope as Exclude<ThemeScope, "all">), { links: true, presence: true, board: true, booking: true });
 
   const lensTokens = [tokens, ...GLASS_RECIPES.map((g) => ({ ...tokens, ...g.patch }))];
@@ -156,7 +160,7 @@ export function ScopedThemeBar({ prefs, setPref, scope = "all", showTypography =
         </div>
         {!custom && (
           <div className="flex flex-wrap gap-1.5">
-            {SHAPE_PRESETS.filter((sp) => sp.glassStyle === "solid").map((sp) => (
+            {SHAPE_PRESETS.filter((sp) => sp.glassStyle === "solid" && (!widgetScope || sp.buttonRadius !== "pill")).map((sp) => (
               <StudioChip
                 key={sp.id}
                 active={design.buttonVariant === sp.buttonVariant && design.buttonRadius === sp.buttonRadius && tokens.glassStyle === sp.glassStyle}
@@ -169,7 +173,7 @@ export function ScopedThemeBar({ prefs, setPref, scope = "all", showTypography =
         )}
         {!custom && (
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {SHAPE_PRESETS.filter((sp) => sp.glassStyle !== "solid").map((sp) => {
+            {SHAPE_PRESETS.filter((sp) => sp.glassStyle !== "solid" && (!widgetScope || sp.buttonRadius !== "pill")).map((sp) => {
               const active = design.buttonVariant === sp.buttonVariant && design.buttonRadius === sp.buttonRadius && tokens.glassStyle === sp.glassStyle;
               const look = glassSurfaceStyle({ ...tokens, glassStyle: sp.glassStyle }, "links", ALL_TARGETS);
               return (

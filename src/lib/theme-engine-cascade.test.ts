@@ -12,7 +12,7 @@ describe("scoped theme cascade", () => {
   });
   it("styles anonymous forms and answers independently", () => {
     const overrides = normalizeThemeOverrides({ questions: { buttonRadius: "pill" }, answers: { fontPairing: "serif" } });
-    expect(resolveComponentDesign(global, overrides, "questions").buttonRadius).toBe("pill");
+    expect(resolveComponentDesign(global, overrides, "questions").buttonRadius).toBe("rounded");
     expect(resolveComponentDesign(global, overrides, "answers").buttonRadius).toBe("rounded");
     expect(resolveComponentDesign(global, overrides, "answers").fontPairing).toBe("serif");
   });
@@ -24,7 +24,7 @@ describe("scoped theme cascade", () => {
 
   it("applies a component override over global", () => {
     const d = resolveComponentDesign(global, { booking: { buttonRadius: "pill", fontPairing: "mono", buttonColor: "#ff0000" } }, "booking");
-    expect(d.buttonRadius).toBe("pill");
+    expect(d.buttonRadius).toBe("rounded");
     expect(d.fontPairing).toBe("mono");
     expect(d.buttonColor).toBe("#ff0000");
     expect(d.buttonVariant).toBe("fill");

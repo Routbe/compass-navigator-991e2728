@@ -1,10 +1,19 @@
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_GLASS, DEFAULT_GLASS_TARGETS, applyScopedPatch, glassSurfaceStyle, hasUniqueStyle,
-  normalizeGlassTokens, resetScope, resolveScopedTokens, scopeOfBlockKind,
+  normalizeGlassTokens, resetScope, resolveScopedTokens, scopeOfBlockKind, resolveComponentDesign,
 } from "@/lib/theme-engine";
 
 describe("scoped theme engine", () => {
+  it("never applies pill shape to interactive widgets", () => {
+    expect(resolveComponentDesign({ buttonRadius: "pill" }, {}, "questions").buttonRadius).toBe("rounded");
+    expect(resolveComponentDesign({ buttonRadius: "pill" }, {}, "links").buttonRadius).toBe("pill");
+  });
+  it("widget overrides do not change link styles", () => {
+    const overrides = { widgets: { buttonColor: "#123456" } };
+    expect(resolveComponentDesign({}, overrides, "questions").buttonColor).toBe("#123456");
+    expect(resolveComponentDesign({}, overrides, "links").buttonColor).toBeUndefined();
+  });
   it("'Alle elementen' changes the global tokens, not overrides", () => {
     const r = applyScopedPatch(DEFAULT_GLASS, {}, "all", { glassStyle: "prism" });
     expect(r.global.glassStyle).toBe("prism");

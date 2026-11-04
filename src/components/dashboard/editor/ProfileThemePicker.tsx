@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useI18n } from "@/lib/i18n";
 import { ScopedThemeBar, ThemeScopeSelect } from "@/components/dashboard/editor/ScopedThemeBar";
 import type { ThemeScope } from "@/lib/theme-engine";
 import { Input } from "@/components/ui/input";
@@ -76,10 +77,12 @@ export function ProfileThemePicker({
   verified,
   blocks = [],
 }: ProfileThemePickerProps) {
+  const { locale } = useI18n();
+  const componentsTitle = { nl: "Componenten & Typografie", en: "Components & Typography", fr: "Composants & Typographie", de: "Komponenten & Typografie" }[locale];
   const [scope, setScope] = useState<ThemeScope>("all");
   const has = (...kinds: string[]) => blocks.some((b) => kinds.includes(b.kind));
   const allowedScopes: ThemeScope[] = [
-    "all", "links", "socials",
+    "all", "links", "widgets", "socials",
     ...(has("booking", "booking_request", "calendly") ? (["booking"] as const) : []),
     ...(prefs.guestbookEnabled || has("widget:guestbook") ? (["board"] as const) : []),
     ...(prefs.presence !== "none" || has("live", "spotify") ? (["presence"] as const) : []),
@@ -182,7 +185,7 @@ export function ProfileThemePicker({
         value="buttons_typography"
         className="rounded-2xl border border-border bg-card px-4 sm:px-5"
       >
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2" data-tour="studio-button-style"><AccordionTrigger className="min-w-0 hover:no-underline"><span className="flex min-w-0 items-center gap-2 text-base font-medium"><StudioSectionIcon kind="typography" /><span className="truncate">Knoppen &amp; Typografie</span></span></AccordionTrigger><ThemeScopeSelect scope={activeScope} onChange={setScope} allowedScopes={allowedScopes} /></div>
+        <div className="flex flex-wrap items-center gap-2" data-tour="studio-button-style"><AccordionTrigger className="min-w-0 flex-1 hover:no-underline"><span className="flex min-w-0 items-center gap-2 text-base font-medium"><StudioSectionIcon kind="typography" /><span>{componentsTitle}</span></span></AccordionTrigger><ThemeScopeSelect scope={activeScope} onChange={setScope} allowedScopes={allowedScopes} /></div>
         <AccordionContent className="space-y-4 pb-5">
           <ScopedThemeBar prefs={prefs} setPref={setPref} scope={activeScope} showTypography={activeScope !== "all"} />
           {activeScope === "all" && <>

@@ -6,10 +6,10 @@
  * merges global + override and turns the result into inline CSS.
  */
 
-export const THEME_SCOPES = ["all", "links", "booking", "board", "presence", "socials", "questions", "answers"] as const;
+export const THEME_SCOPES = ["all", "links", "widgets", "booking", "board", "presence", "socials", "questions", "answers"] as const;
 export type ThemeScope = (typeof THEME_SCOPES)[number];
 export type ComponentScope = Exclude<ThemeScope, "all">;
-export const COMPONENT_SCOPES: ComponentScope[] = ["links", "booking", "board", "presence", "socials", "questions", "answers"];
+export const COMPONENT_SCOPES: ComponentScope[] = ["links", "widgets", "booking", "board", "presence", "socials", "questions", "answers"];
 
 export const GLASS_STYLES = ["solid", "frosted-light", "frosted-dark", "obsidian", "prism", "neon"] as const;
 export type GlassStyle = (typeof GLASS_STYLES)[number];
@@ -146,7 +146,8 @@ export function normalizeGlassTargets(raw: unknown): GlassTargets {
 
 /** Global tokens merged with the scope's override ("all" = global only). */
 export function resolveScopedTokens(global: GlassTokens, overrides: ThemeOverrides, scope: ThemeScope): GlassTokens {
-  return scope === "all" ? global : { ...global, ...(overrides[scope] ?? {}) };
+  const widgetScope = ["widgets", "booking", "board", "presence", "questions", "answers"].includes(scope);
+  return scope === "all" ? global : { ...global, ...(widgetScope ? overrides.widgets : {}), ...(overrides[scope] ?? {}) };
 }
 
 /**
@@ -160,9 +161,12 @@ export function resolveComponentDesign<T extends object>(
   overrides: ThemeOverrides,
   scope: ThemeScope,
 ): T & ScopeOverride & { hasButtonOverride: boolean } {
-  const o = scope === "all" ? undefined : overrides[scope];
+  const widgetScope = ["widgets", "booking", "board", "presence", "questions", "answers"].includes(scope);
+  const o = scope === "all" ? undefined : { ...(widgetScope ? overrides.widgets : {}), ...overrides[scope] };
   const hasButtonOverride = !!o && BUTTON_TOKEN_KEYS.some((k) => o[k] !== undefined);
-  return { ...global, ...(o ?? {}), hasButtonOverride };
+  const result = { ...global, ...(o ?? {}), hasButtonOverride };
+  if (widgetScope && "buttonRadius" in result && result.buttonRadius === "pill") return { ...result, buttonRadius: "rounded" };
+  return result;
 }
 
 /** Effective style for one component type: its override merged over the global defaults. */
@@ -207,7 +211,7 @@ export function resetScope(overrides: ThemeOverrides, scope: ComponentScope): Th
 
 /** Which glass target checkbox governs a scope (socials follow links). */
 function targetOf(scope: ComponentScope): keyof GlassTargets {
-  if (scope === "questions" || scope === "answers") return "board";
+  if (scope === "questions" || scope === "answers" || scope === "widgets") return "board";
   return scope === "socials" ? "links" : scope;
 }
 
@@ -290,9 +294,11 @@ export function glassSurfaceStyle(
 
 /** Maps a profile block kind to the theme scope that styles it. */
 export function scopeOfBlockKind(kind: string): ComponentScope {
+  if (kind === "widget:questions") return "questions";
   if (kind === "booking_request" || kind === "booking") return "booking";
   if (kind === "live") return "presence";
   if (kind === "widget:guestbook" || kind === "live_poll" || kind === "contact_form" || kind === "faq_accordion") return "board";
   if (kind === "social_feed" || kind === "social") return "socials";
+  if (["audio_player", "media_embed", "gallery", "countdown", "map", "event_list", "feedback", "newsletter", "poll"].includes(kind) || kind.startsWith("widget:")) return "widgets";
   return "links";
 }

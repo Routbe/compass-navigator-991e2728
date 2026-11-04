@@ -275,6 +275,10 @@ export function LayerStudioAccordion({ value, onChange, blocks }: Props) {
               </Select>
               {blockId && (
                 <div className="space-y-3 rounded-lg border border-border bg-background p-3">
+                  <div className="grid grid-cols-2 gap-2">
+                    <label className="space-y-1 text-xs">Breedte<Select value={String(blockStyle.width ?? 2)} onValueChange={v => setBlockStyle({ width: v === "1" ? 1 : 2 })}><SelectTrigger aria-label="Componentbreedte"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="1">Halve breedte</SelectItem><SelectItem value="2">Volle breedte</SelectItem></SelectContent></Select></label>
+                    <label className="space-y-1 text-xs">Hoogte<Select value={blockStyle.height ?? "auto"} onValueChange={v => setBlockStyle({ height: v as BlockStyle["height"] })}><SelectTrigger aria-label="Componenthoogte"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="auto">Automatisch</SelectItem><SelectItem value="medium">Hoog</SelectItem><SelectItem value="tall">Extra hoog</SelectItem></SelectContent></Select></label>
+                  </div>
                   <div className="flex flex-wrap gap-3">
                     <ColorField label="Vlak" value={blockStyle.bg ?? "#ffffff"} onChange={(v) => setBlockStyle({ bg: v })} />
                     <ColorField label="Tekst" value={blockStyle.text ?? "#111111"} onChange={(v) => setBlockStyle({ text: v })} />

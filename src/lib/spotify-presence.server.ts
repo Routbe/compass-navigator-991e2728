@@ -214,8 +214,7 @@ export async function nowPlaying(userId: string): Promise<NowPlaying> {
   if (bad) {
     if (bad !== "no_content") {
       const body = await res.text().catch(() => "");
-      const clientIdPrefix = (process.env["SPOTIFY_CLIENT_ID"] ?? "").slice(0, 5);
-      console.error("[Spotify API Error]:", res.status, body, `client_id=${clientIdPrefix}...`);
+      console.error("[Spotify API Error]:", res.status);
     }
     return { playing: false, reason: bad };
   }
