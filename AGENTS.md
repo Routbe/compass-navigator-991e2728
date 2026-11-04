@@ -16,6 +16,7 @@
 - Subdirectories have their own AGENTS.md; read them before changing files there.
 
 ## Public documentation and editing
+- Keep the custom four-part sitemap: documentation catalogue plus explicitly classified public tools/pages, checked against route sources; dynamic lists use stable keyset pagination and fail rather than truncate. Why: complete discovery must not expose private routes or hide query failures.
 - Homepage profile examples use isolated local dialog state and never call booking or payment services. Why: interactive previews must not create transactions or collect personal data.
 - Favicon variants, including the bare /favicon.ico fallback, derive from the canonical ROUT vector. Why: standalone-image browser tabs do not read the application head.
 - Localized MDX articles use locale-suffixed siblings and one canonical catalogue entry; loaders resolve localized head metadata. Why: translation must not duplicate navigation or sitemap paths.
