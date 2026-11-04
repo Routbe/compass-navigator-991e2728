@@ -1,5 +1,11 @@
 # Repository import
 
+## Current artwork and homepage request
+- [ ] Remove stale Lovable favicon fallback and verify ROUT icons on pages and direct PNG views.
+- [ ] Refine and complete public Wallet PNG artwork without unsupported certification claims.
+- [ ] Correct the scan photograph with a real branded payment-information QR and consistent phone view, if safely editable.
+- [ ] Add localized website, appointment and creator-support interactions to the homepage profile example.
+
 - [x] Inspect archive and preserve platform metadata.
 - [x] Import ROUT application source, assets and service scripts without credentials.
 - [x] Install dependencies and check public desktop/phone menus, all homepage chapters and scroll flow.
