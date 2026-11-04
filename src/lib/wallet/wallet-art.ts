@@ -57,18 +57,23 @@ function guilloche(w: number, h: number, color: string, opacity: number): string
 
 /** Sovereign seal (660×660): decorative brand emblem, not a certification. */
 export function sovereignSealSvg(size = 660): string {
-  const c = size / 2;
-  const petals = Array.from({ length: 48 }, (_, i) => {
-    const a = (i / 48) * Math.PI * 2;
-    return `<line x1="${c + Math.cos(a) * c * 0.62}" y1="${c + Math.sin(a) * c * 0.62}" x2="${c + Math.cos(a) * c * 0.96}" y2="${c + Math.sin(a) * c * 0.96}" stroke="${i % 2 ? BRAND.mint : BRAND.purple}" stroke-width="${size * 0.008}" opacity="0.85"/>`;
+  const c = 330;
+  const engraving = Array.from({ length: 120 }, (_, i) => {
+    const a = (i / 120) * Math.PI * 2;
+    return `<path d="M${c + Math.cos(a) * 256} ${c + Math.sin(a) * 256}L${c + Math.cos(a) * (i % 5 ? 268 : 280)} ${c + Math.sin(a) * (i % 5 ? 268 : 280)}" stroke="url(#metal)" stroke-width="${i % 5 ? 1 : 2}"/>`;
   }).join("");
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-<defs><radialGradient id="g" cx="40%" cy="35%" r="75%"><stop offset="0" stop-color="#2a2733"/><stop offset="1" stop-color="${BRAND.ink}"/></radialGradient>
-<path id="ring" d="M ${c} ${c} m -${c * 0.78} 0 a ${c * 0.78} ${c * 0.78} 0 1 1 ${c * 1.56} 0 a ${c * 0.78} ${c * 0.78} 0 1 1 -${c * 1.56} 0"/></defs>
-<circle cx="${c}" cy="${c}" r="${c}" fill="url(#g)"/>${petals}
-<circle cx="${c}" cy="${c}" r="${c * 0.6}" fill="${BRAND.ink}" stroke="${BRAND.mint}" stroke-width="${size * 0.01}"/>
-<text font-family="Inter, sans-serif" font-weight="600" font-size="${size * 0.05}" letter-spacing="0" fill="${BRAND.paper}" opacity="0.9"><textPath href="#ring" startOffset="0">ROUT · YOUR IDENTITY · YOUR CHOICE ·</textPath></text>
-${bunny(c - c * 0.38, c - c * 0.42, c * 0.76, BRAND.paper)}
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 660 660">
+<defs><linearGradient id="metal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${BRAND.paper}"/><stop offset=".22" stop-color="${mixHex(BRAND.ink, BRAND.paper, .5)}"/><stop offset=".44" stop-color="${BRAND.paper}"/><stop offset=".7" stop-color="${mixHex(BRAND.ink, BRAND.paper, .28)}"/><stop offset="1" stop-color="${BRAND.paper}"/></linearGradient><radialGradient id="face" cx="35%" cy="25%" r="80%"><stop stop-color="${mixHex(BRAND.ink, BRAND.paper, .12)}"/><stop offset="1" stop-color="${BRAND.ink}"/></radialGradient></defs>
+<rect width="660" height="660" fill="${BRAND.ink}"/>
+<circle cx="330" cy="330" r="302" fill="url(#face)" stroke="url(#metal)" stroke-width="3"/>
+<circle cx="330" cy="330" r="290" fill="none" stroke="url(#metal)" stroke-width="1"/>${engraving}
+<circle cx="330" cy="330" r="238" fill="none" stroke="url(#metal)" stroke-width="2"/>
+<circle cx="330" cy="330" r="226" fill="none" stroke="${BRAND.mint}" stroke-width="1" opacity=".6"/>
+${guilloche(450, 380, BRAND.mint, .045).replace(/<path /g, '<path transform="translate(105 105)" ')}
+${bunny(244, 183, 172, BRAND.paper)}
+<text x="330" y="418" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="46" fill="${BRAND.paper}">ROUT</text>
+<path d="M278 443h104" stroke="${BRAND.mint}" stroke-width="2"/>
+<text x="330" y="477" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="${BRAND.paper}" opacity=".8">YOUR IDENTITY. YOUR CHOICE.</text>
 </svg>`;
 }
 
