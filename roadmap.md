@@ -18,6 +18,9 @@
 - [x] Review briefs and referenced projects for licensed patterns without executing their code; no copyleft reference source copied.
 
 ## Remaining scope
+- [ ] Extend private Command Center external-widget catalogue and layout management; keep provider connections explicit and private.
+- [ ] Rename Componenten & Typografie and improve widget-specific scopes and bounded sizes in Studio.
+- [ ] Inspect existing rout.be sitemap and fix source issues; distinguish unpublished source from the live domain.
 - [x] Refine code-drawn Wallet artwork and collect secrets securely: renewed hero, image module, brand seal and trust strip; six PNGs decoded on desktop/phone without overflow or browser errors; 19 Wallet tests passed. Removed unsubstantiated certification claims from generic artwork.
 - Additional homepage motion refinements, visitor-metric dashboard widgets and richer profile-widget resizing are not implemented in this milestone.
 - Info/dev/safety article translations and full press-root localization are outside the completed About/Wallet/previews translation set.
